@@ -4,7 +4,7 @@ export default class Camera {
 
   constructor(config) {
     const canvas = document.getElementById('D3');
-    this.element = new THREE.PerspectiveCamera(25, canvas.clientWidth / canvas.clientHeight, 0.1, 1000);
+    this.element = new THREE.PerspectiveCamera(25, canvas.clientWidth / canvas.clientHeight, 0.1, 3000);
     this.target = new THREE.Vector3();
 
     this.x = config.x;
@@ -29,8 +29,9 @@ export default class Camera {
   }
 
   scale(zoom) {
-    this.zoom = zoom;
-    this.element.zoom = this.zoom;
+    this.zoom = zoom/2;
+    //this.element.zoom = this.zoom;
+    console.log(zoom )
   }
 
   move(x, y, z) {
@@ -47,10 +48,12 @@ export default class Camera {
   moveTarget(x, y, z) {
     this.tX = x;
     this.tZ = z;
-    this.x = this.offsetX + this.tX;
-    this.z = this.offsetZ + this.tZ;
+    this.x = (this.offsetX * this.zoom) + this.tX;
+    this.y = (this.offsetY * this.zoom) + this.tY;
+    this.z = (this.offsetZ * this.zoom) + this.tZ;
 
     this.element.position.x = this.x;
+    this.element.position.y = this.y;
     this.element.position.z = this.z;
     this.target.x = this.tX;
     this.target.z = this.tZ;

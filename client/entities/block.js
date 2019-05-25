@@ -6,7 +6,7 @@ export default class Ground extends Entity {
 
   constructor(config) {
     super(config);
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
+    const geometry = new THREE.BoxGeometry(this.size, this.size, this.size);
     this.element = new THREE.Mesh(geometry, material);
     this.element.matrixAutoUpdate = false;
     this.element.receiveShadow = false;
@@ -21,8 +21,8 @@ export default class Ground extends Entity {
 
   setForce(force, angle) {
     if(force) {
-      this.forceX = Math.cos(angle) * force  * this.forceFactor;
-      this.forceZ = -Math.sin(angle) * force  * this.forceFactor;
+      this.forceX = Math.cos(angle) * force  * this.forceFactor * (1 + this.scale/2);
+      this.forceZ = -Math.sin(angle) * force  * this.forceFactor * (1 + this.scale/2);
     } else {
       this.forceX = 0;
       this.forceZ = 0;
@@ -33,6 +33,20 @@ export default class Ground extends Entity {
     const x = this.x + this.forceX * dt;
     const z = this.z + this.forceZ * dt;
     this.move(x, 0, z);
+  }
+
+  eat(feeds) {
+    let feed; let margin;
+    for (let i in feeds) {
+      feed = feeds[i];
+      margin = (feed.size * feed.scale + this.size * this.scale)/2;
+      if(Math.abs(this.x-feed.x)<margin && Math.abs(this.z-feed.z)<margin) {
+        feed.onDismount();
+        feeds.splice(i, 1);
+        i--;
+        this.scale += feed.value/10;
+      }
+    }
   }
 }
 

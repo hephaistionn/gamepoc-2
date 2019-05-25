@@ -1,0 +1,22 @@
+import * as THREE from 'three';
+import Entity from '../core/entity';
+import material from '../shaders/materialBlock';
+
+export default class Feed extends Entity {
+
+  constructor(config) {
+    super(config);
+    const geometry = new THREE.BoxGeometry(this.size, this.size, this.size);
+    this.element = new THREE.Mesh(geometry, material.clone());
+    this.element.matrixAutoUpdate = false;
+    this.element.receiveShadow = false;
+    this.element.castShadow = true;
+    this.element.material.color.setHex( Math.random() * 0xffffff );
+    this.size = 1;
+    this.value = 1;
+
+    this.move(this.x, this.y, this.z);
+  }
+
+}
+

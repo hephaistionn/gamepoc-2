@@ -4,11 +4,11 @@ export default class Light {
 
   constructor(config) {
     this.element = new THREE.Object3D();
-    this.ambient = new THREE.AmbientLight(0x111111);
-    this.directionalLight = new THREE.DirectionalLight(0xffffff);
+    this.ambient = new THREE.AmbientLight(0x888888);
+    this.directionalLight = new THREE.DirectionalLight(0x888888);
     this.directionalLight.matrixAutoUpdate = false;
     this.directionalLight.castShadow = true;
-    this.directionalLight.shadow = new THREE.LightShadow(new THREE.OrthographicCamera(-10, 10, 10, -10, 1, 200));
+    this.directionalLight.shadow = new THREE.LightShadow(new THREE.OrthographicCamera(-6, 6, 6, -6, 1, 200));
     this.directionalLight.shadow.bias = 0.001;
     this.directionalLight.shadow.radius = 0.8;
     this.directionalLight.shadow.mapSize.width = 1024;
