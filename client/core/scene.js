@@ -1,4 +1,6 @@
 import * as THREE from 'three';
+import ee from './eventemitter';
+import nipplejs from 'nipplejs';
 
 export default class Scene {
 
@@ -11,7 +13,35 @@ export default class Scene {
     this.renderer.shadowMap.enabled = true;
     this.element = new THREE.Scene();
     this.element.matrixAutoUpdate = false;
+    this.events = {};
+
+    this.initEvents();
+    this.initJoystick();
     this.init();
+  }
+
+  initEvents() {
+    this._resize = this.resize.bind(this);
+    window.addEventListener('resize', this._resize, false);
+  }
+
+  initJoystick() {
+    const options = {
+      zone: document.getElementById('zone_joystick'),
+      mode: 'dynamic',
+      color: 'blue',
+      multitouch: false
+    };
+    this.joystick = nipplejs.create(options);
+    this.joystick.on('move', (evt, data) => {
+      if(this.onTouchMouve)
+        this.onTouchMouve(data.force, data.angle.radian);
+    });
+
+    this.joystick.on('end', () => {
+      if(this.onTouchEnd)
+        this.onTouchEnd();
+    });
   }
 
   start() {
@@ -29,10 +59,16 @@ export default class Scene {
   }
 
   stop() {
+    this.closeEvents();
+    this.closeJoystick();
     cancelAnimationFrame(requestAnimation);
   }
 
-  resize(width, height) {
+  resize() {
+    this.canvas.style = '';
+    const width = this.canvas.clientWidth;
+    const height = this.canvas.clientHeight;
+    this.camera.resize(width, height);
     this.renderer.setSize(width, height);
   }
 
@@ -40,10 +76,15 @@ export default class Scene {
     child.onMount(this);
   }
 
-  remove(child) {
+  remove(child) {s
     child.onDismount();
   }
 
+  closeEvents() {
+    window.removeEventListener('resize', this._resize);
+  }
 
-
+  closeJoystick() {
+    this.joystick.destroy();
+  }
 }
