@@ -1,16 +1,16 @@
 import ee from './core/eventemitter';
-import SceneA from './entities/sceneA';
-
-const scene = new SceneA();
-
-ee.on('stopScreen', () => {
-    scene.stop();
-});
-
-ee.on('startScreen', () => { 
-    scene.start();
-});
+import World from './world';
 
 window.addEventListener('load', () => {
+    const scene = new World();
+
+    ee.on('stopScreen', () => {
+        scene.stop();
+    });
+
+    ee.on('startScreen', () => {
+        scene.start();
+    });
+
     ee.emit('startScreen');
 });
