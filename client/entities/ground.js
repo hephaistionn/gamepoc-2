@@ -6,7 +6,7 @@ export default class Ground extends Entity {
 
   constructor(config) {
     super(config);
-    const geometry = new THREE.PlaneBufferGeometry(80, 80, 10, 10);
+    const geometry = new THREE.PlaneBufferGeometry(80, 80, 20, 20);
     geometry.rotateX(-Math.PI / 2);
     geometry.computeVertexNormals();
     geometry.computeBoundingBox();

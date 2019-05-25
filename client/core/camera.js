@@ -13,6 +13,9 @@ export default class Camera {
     this.tX = config.tX || 0;
     this.tY = config.tY || 0;
     this.tZ = config.tZ || 0;
+    this.offsetX = this.x - this.tX;
+    this.offsetY = this.y - this.tY;
+    this.offsetZ = this.z - this.tZ;
     this.zoom = 1;
 
     this.move(this.x, this.y, this.z);
@@ -43,13 +46,17 @@ export default class Camera {
 
   moveTarget(x, y, z) {
     this.tX = x;
-    this.tY = y;
     this.tZ = z;
+    this.x = this.offsetX + this.tX;
+    this.z = this.offsetZ + this.tZ;
+
+    this.element.position.x = this.x;
+    this.element.position.z = this.z;
     this.target.x = this.tX;
-    this.target.y = this.tY;
     this.target.z = this.tZ;
+
     this.element.lookAt(this.target);
-    // this.element.updateProjectionMatrix();
+    this.element.updateProjectionMatrix();
   }
 
   onMount(parent) {

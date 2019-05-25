@@ -16,8 +16,6 @@ export default class Light {
     this.element.add(this.ambient);
     this.element.add(this.directionalLight);
 
-
-
     this.parent = null;
     this.x = config.x;
     this.y = config.y;
@@ -25,21 +23,21 @@ export default class Light {
     this.tX = config.tX || 0;
     this.tY = config.tY || 0;
     this.tZ = config.tZ || 0;
+    this.offsetX = this.x - this.tX;
+    this.offsetY = this.y - this.tY;
+    this.offsetZ = this.z - this.tZ;
     this.zoom = 1;
 
     this.move(this.x, this.y, this.z);
   }
 
   move(x, y, z) {
-    const dx = x - this.x;
-    const dy = y - this.y;
-    const dz = z - this.z;
     this.x = x;
     this.y = y;
     this.z = z;
-    this.tX += dx;
-    this.tY += dy;
-    this.tZ += dz;
+    this.tX = this.x - this.offsetX;
+    this.tY = this.y - this.offsetY;
+    this.tZ = this.z - this.offsetZ;
 
     this.directionalLight.shadow.camera.zoom = this.zoom / 5;
     //this.directionalLight.shadow.camera.updateProjectionMatrix();
@@ -51,12 +49,26 @@ export default class Light {
     this.directionalLight.target.matrixWorld.elements[14] = this.tZ;
   }
 
+  moveTarget(x, y, z) {
+    this.tX = x;
+    this.tZ = z;
+    this.x = this.offsetX + this.tX;
+    this.z = this.offsetZ + this.tZ;
+
+    this.directionalLight.matrix.elements[12] = this.x;
+    this.directionalLight.matrix.elements[14] = this.z;
+    this.directionalLight.target.matrixWorld.elements[12] = this.tX;
+    this.directionalLight.target.matrixWorld.elements[14] = this.tZ;
+
+    // this.helper.update();
+  }
+
   onMount(parent) {
     this.parent = parent;
     this.parent.element.add(this.element);
 
-    const helper = new THREE.DirectionalLightHelper(this.directionalLight);
-    this.parent.element.add(helper);
+    // this.helper = new THREE.DirectionalLightHelper(this.directionalLight);
+    // this.parent.element.add(this.helper);
   }
 
   onDismount() {
