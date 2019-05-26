@@ -12,10 +12,7 @@ export default class Feed extends Entity {
     this.element.receiveShadow = false;
     this.element.castShadow = true;
     this.element.material.color.setHex( Math.random() * 0xffffff );
-    this.size = 1;
-    this.value = 1;
-
-    this.move(this.x, this.y, this.z);
+    this.move(config.x, config.y, config.z);
   }
 
 }

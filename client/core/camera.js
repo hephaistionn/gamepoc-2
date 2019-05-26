@@ -16,11 +16,16 @@ export default class Camera {
     this.offsetX = this.x - this.tX;
     this.offsetY = this.y - this.tY;
     this.offsetZ = this.z - this.tZ;
-    this.zoom = 1;
+    this.zoom = 0.5;
+    this.zoomTarget = 1;
 
     this.move(this.x, this.y, this.z);
-    this.moveTarget(this.tX, this.tY, this.tZ);
-    this.scale(this.zoom);
+    this.moveTarget(this.tX, this.tY, this.tZ);;
+  }
+
+  update(dt) {
+    const delta = this.zoomTarget - this.zoom;
+    this.zoom += delta *  dt * 0.005;
   }
 
   resize(width, height) {
@@ -29,9 +34,7 @@ export default class Camera {
   }
 
   scale(zoom) {
-    this.zoom = zoom/2;
-    //this.element.zoom = this.zoom;
-    console.log(zoom )
+    this.zoomTarget = zoom/2;
   }
 
   move(x, y, z) {

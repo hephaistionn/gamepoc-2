@@ -14,14 +14,15 @@ export default class World extends Scene {
     this.block = new Block({ x: 0, y: 0, z: 0 });
     this.feeds = [];
 
-    for(let i=0; i<800; i++) {
+
+    for(let i=0; i<500; i++) {
+      const random = (1 + Math.random() * 2);
       this.feeds[i] = new Feed({
-        x: Math.floor((Math.random()-0.5) * 160 ),
+        x: Math.floor((Math.random()-0.5) * 200 ),
         y: 0,
-        z: Math.floor((Math.random()-0.5) * 160 )
+        z: Math.floor((Math.random()-0.5) * 200 ),
+        scale: Math.round(random * random * random / 9)
       });
-
-
       this.add(this.feeds[i]);
     }
 
@@ -33,10 +34,15 @@ export default class World extends Scene {
 
   update(dt) {
     this.block.update(dt);
+    this.camera.update(dt);
     this.camera.moveTarget(this.block.x, this.block.y, this.block.z);
     this.light.moveTarget(this.block.x, this.block.y, this.block.z);
     this.camera.scale(this.block.scale);
+    this.light.scale(this.block.scale);
     this.block.eat(this.feeds);
+
+    // ne peut manger que les entités de taille inf ou égale.
+    // ne peut pas traverser les antitiés de taille superieure.
   }
 
   onTouchMouve(force, angle) {

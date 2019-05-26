@@ -8,14 +8,14 @@ export default class Camera {
     this.y = config.y;
     this.z = config.z;
     this.a = config.a || 0;
-    this.scale = 1;
+    this.scale = config.scale||1;
     this.size = 1;
-    this.value = 1;
+    this.value = 0.04;
   }
 
   move(x, y, z) {
     this.x = x;
-    this.y = y;
+    this.y = y + this.size * this.scale / 2;
     this.z = z;
     const matrixWorld = this.element.matrixWorld.elements;
     matrixWorld[12] = this.x
@@ -30,7 +30,10 @@ export default class Camera {
     matrixWorld[0] *= this.scale;
     matrixWorld[5] *= this.scale;
     matrixWorld[10] *= this.scale;
+  }
 
+  getValue() {
+    return this.scale * this.value;
   }
 
   onMount(parent) {

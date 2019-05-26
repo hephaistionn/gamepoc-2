@@ -15,14 +15,14 @@ export default class Ground extends Entity {
     this.forceX = 0;
     this.forceZ = 0;
     this.forceFactor = 0.002;
-
-    this.move(this.x, this.y, this.z);
+    this.move(config.x, config.y, config.z);
   }
 
   setForce(force, angle) {
     if(force) {
       this.forceX = Math.cos(angle) * force  * this.forceFactor * (1 + this.scale/2);
       this.forceZ = -Math.sin(angle) * force  * this.forceFactor * (1 + this.scale/2);
+      //this.a = -angle;
     } else {
       this.forceX = 0;
       this.forceZ = 0;
@@ -44,7 +44,7 @@ export default class Ground extends Entity {
         feed.onDismount();
         feeds.splice(i, 1);
         i--;
-        this.scale += feed.value/10;
+        this.scale += feed.getValue();
       }
     }
   }
