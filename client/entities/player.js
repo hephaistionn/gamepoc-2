@@ -12,6 +12,7 @@ export default class Player extends Entity {
     this.element.receiveShadow = false;
     this.element.castShadow = true;
 
+    this.size = 1.2;
     this.forceX = 0;
     this.forceZ = 0;
     this.forceFactor = 0.002;
@@ -29,13 +30,10 @@ export default class Player extends Entity {
     }
   }
 
-  update(dt) {
-    const x = this.x + this.forceX * dt;
-    const z = this.z + this.forceZ * dt;
-    this.move(x, 0, z);
-  }
+  update(dt, feeds) {
+    let x = this.x + this.forceX * dt;
+    let z = this.z + this.forceZ * dt;
 
-  eat(feeds) {
     const marginPlayer = this.size * this.scale;
     let feed;
     let marginFeed;
@@ -44,13 +42,18 @@ export default class Player extends Entity {
       feed = feeds[i];
       marginFeed = feed.size * feed.scale;
       margin = (marginFeed + marginPlayer)/2;
-      if(marginPlayer >= marginFeed && Math.abs(this.x-feed.x)<margin && Math.abs(this.z-feed.z)<margin) {
-        feed.onDismount();
-        feeds.splice(i, 1);
-        i--;
-        this.scale += feed.getValue();
+      if(Math.abs(x-feed.x)<margin && Math.abs(z-feed.z)<margin) {
+        if(marginPlayer > marginFeed) {
+          feed.onDismount();
+          feeds.splice(i, 1);
+          this.scale += feed.getValue();
+          i--;
+        } else {
+          return;
+        }
       }
     }
+    this.move(x, 0, z);  
   }
 }
 

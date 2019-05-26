@@ -14,7 +14,6 @@ export default class World extends Scene {
     this.player = new Player({ x: 0, y: 0, z: 0 });
     this.feeds = [];
 
-
     for(let i=0; i<500; i++) {
       const random = (1 + Math.random() * 2);
       this.feeds[i] = new Feed({
@@ -33,14 +32,13 @@ export default class World extends Scene {
   }
 
   update(dt) {
-    this.player.update(dt);
+    this.player.update(dt, this.feeds);
     this.camera.update(dt);
     this.camera.moveTarget(this.player.x, this.player.y, this.player.z);
     this.light.moveTarget(this.player.x, this.player.y, this.player.z);
     this.camera.scale(this.player.scale);
     this.light.scale(this.player.scale);
-    this.player.eat(this.feeds);
-    // ne peut pas traverser les antitiés de taille superieure.
+    
   }
 
   onTouchMouve(force, angle) {
