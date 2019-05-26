@@ -2,7 +2,7 @@ import * as THREE from 'three';
 import Entity from '../core/entity';
 import material from '../shaders/materialBlock';
 
-export default class Ground extends Entity {
+export default class Player extends Entity {
 
   constructor(config) {
     super(config);
@@ -36,11 +36,15 @@ export default class Ground extends Entity {
   }
 
   eat(feeds) {
-    let feed; let margin;
+    const marginPlayer = this.size * this.scale;
+    let feed;
+    let marginFeed;
+    let margin;
     for (let i in feeds) {
       feed = feeds[i];
-      margin = (feed.size * feed.scale + this.size * this.scale)/2;
-      if(Math.abs(this.x-feed.x)<margin && Math.abs(this.z-feed.z)<margin) {
+      marginFeed = feed.size * feed.scale;
+      margin = (marginFeed + marginPlayer)/2;
+      if(marginPlayer >= marginFeed && Math.abs(this.x-feed.x)<margin && Math.abs(this.z-feed.z)<margin) {
         feed.onDismount();
         feeds.splice(i, 1);
         i--;
