@@ -17,8 +17,8 @@ export default class Player extends Entity {
     this.forceZ = 0;
     this.retroForceX = 0;
     this.retroForceZ = 0;
-    this.retroForceMax = 0.045;
-    this.forceFactor = 0.002;
+    this.retroForceMax = 0.02;
+    this.forceFactor = 0.003;
     this.rebound = 0.1;
     this.debound = 0.008
 
@@ -26,9 +26,9 @@ export default class Player extends Entity {
   }
 
   setForce(force, angle) {
-    if(force) {
-      this.forceX = Math.cos(angle) * force  * this.forceFactor * (1 + this.scale/2);
-      this.forceZ = -Math.sin(angle) * force  * this.forceFactor * (1 + this.scale/2);
+    if (force) {
+      this.forceX = Math.cos(angle) * force * this.forceFactor * (1 + this.scale / 3);
+      this.forceZ = -Math.sin(angle) * force * this.forceFactor * (1 + this.scale / 3);
       //this.a = -angle;
     } else {
       this.forceX = 0;
@@ -43,13 +43,13 @@ export default class Player extends Entity {
     const eX = 0 - this.retroForceX;
     const eZ = 0 - this.retroForceZ;
 
-    this.retroForceX += eX * dt  * this.debound;
-    this.retroForceZ += eZ * dt  * this.debound;
+    this.retroForceX += eX * dt * this.debound;
+    this.retroForceZ += eZ * dt * this.debound;
 
-    if(Math.abs(this.retroForceX)<0.0001){
+    if (Math.abs(this.retroForceX) < 0.0001) {
       this.retroForceX = 0;
     }
-    if(Math.abs(this.retroForceZ)<0.0001){
+    if (Math.abs(this.retroForceZ) < 0.0001) {
       this.retroForceZ = 0;
     }
 
@@ -62,23 +62,23 @@ export default class Player extends Entity {
     for (let i in feeds) {
       feed = feeds[i];
       marginFeed = feed.size * feed.scale;
-      margin = (marginFeed + marginPlayer)/2;
-      overlapX = Math.abs(x-feed.x);
-      overlapZ = Math.abs(z-feed.z);
-      if(overlapX<margin && overlapZ<margin) {
-        if(marginPlayer > marginFeed) {
-          feed.onDismount();
+      margin = (marginFeed + marginPlayer) / 2;
+      overlapX = Math.abs(x - feed.x);
+      overlapZ = Math.abs(z - feed.z);
+      if (overlapX < margin && overlapZ < margin) {
+        if (marginPlayer > marginFeed) {
+          feed.onEat();
           feeds.splice(i, 1);
           this.scale += feed.getValue();
           i--;
         } else {
           // rebound
-          if(overlapZ>overlapX) {
-            this.retroForceX = (this.forceX+this.retroForceX) * dt * this.rebound * marginFeed/marginPlayer
-            this.retroForceZ = -(this.forceZ+this.retroForceZ) * dt * this.rebound * marginFeed/marginPlayer;
+          if (Math.abs(this.forceZ) > Math.abs(this.forceX)) {
+            this.retroForceX = (this.forceX + this.retroForceX) * dt * this.rebound * marginFeed / marginPlayer
+            this.retroForceZ = -(this.forceZ + this.retroForceZ) * dt * this.rebound * marginFeed / marginPlayer;
           } else {
-            this.retroForceX = -(this.forceX+this.retroForceX) * dt * this.rebound * marginFeed/marginPlayer;
-            this.retroForceZ = (this.forceZ+this.retroForceZ) * dt * this.rebound * marginFeed/marginPlayer;
+            this.retroForceX = -(this.forceX + this.retroForceX) * dt * this.rebound * marginFeed / marginPlayer;
+            this.retroForceZ = (this.forceZ + this.retroForceZ) * dt * this.rebound * marginFeed / marginPlayer;
           }
           //saturation
           this.retroForceX = Math.min(Math.abs(this.retroForceX), this.retroForceMax) * Math.sign(this.retroForceX);
@@ -87,7 +87,7 @@ export default class Player extends Entity {
         }
       }
     }
-    this.move(x, 0, z);  
+    this.move(x, 0, z);
   }
 }
 

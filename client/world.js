@@ -14,12 +14,12 @@ export default class World extends Scene {
     this.player = new Player({ x: 0, y: 0, z: 0 });
     this.feeds = [];
 
-    for(let i=0; i<500; i++) {
+    for (let i = 0; i < 500; i++) {
       const random = (1 + Math.random() * 2);
       this.feeds[i] = new Feed({
-        x: Math.floor((Math.random()-0.5) * 160 ),
+        x: Math.floor((Math.random() - 0.5) * 160),
         y: 0,
-        z: Math.floor((Math.random()-0.5) * 160 ),
+        z: Math.floor((Math.random() - 0.5) * 160),
         scale: Math.round(random * random * random / 9)
       });
       this.add(this.feeds[i]);
@@ -38,7 +38,11 @@ export default class World extends Scene {
     this.light.moveTarget(this.player.x, this.player.y, this.player.z);
     this.camera.scale(this.player.scale);
     this.light.scale(this.player.scale);
-    
+
+    for (let i = Feed.dying.length - 1; i > -1; i--) {
+      const feed = Feed.dying[i];
+      feed.update(dt);
+    }
   }
 
   onTouchMouve(force, angle) {

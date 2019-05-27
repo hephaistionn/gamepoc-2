@@ -1,6 +1,6 @@
 import * as THREE from 'three';
 
-export default class Camera {
+class Entity {
 
   constructor(config) {
     this.element = new THREE.Object3D();
@@ -8,7 +8,8 @@ export default class Camera {
     this.y = config.y;
     this.z = config.z;
     this.a = config.a || 0;
-    this.scale = config.scale||1;
+    this.scale = config.scale || 1;
+    this.dead = false;
     this.size = 1;
     this.value = 0.04;
   }
@@ -26,14 +27,30 @@ export default class Camera {
     matrixWorld[5] = 1;
     matrixWorld[8] = -matrixWorld[2];
     matrixWorld[10] = matrixWorld[0];
-    
+
     matrixWorld[0] *= this.scale;
     matrixWorld[5] *= this.scale;
     matrixWorld[10] *= this.scale;
   }
 
+  update(dt) {
+    if (this.scale > 0.3) {
+      this.scale -= dt * 0.006;
+      this.move(this.x, 0, this.z);
+    } else {
+      const i = this.constructor.dying.indexOf(this);
+      this.constructor.dying.splice(i, 1);
+      this.onDismount();
+    }
+  }
+
   getValue() {
     return this.scale * this.value;
+  }
+
+  onEat() {
+    this.dead = true;
+    this.constructor.dying.push(this);
   }
 
   onMount(parent) {
@@ -49,3 +66,6 @@ export default class Camera {
   }
 
 };
+
+Entity.dying = [];
+export default Entity;

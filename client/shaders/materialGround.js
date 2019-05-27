@@ -1,3 +1,3 @@
 import * as THREE from 'three';
 
-export default new THREE.MeshPhongMaterial({ color: 0xffffff, wireframe : false });
+export default new THREE.MeshPhongMaterial({ color: 0x222222, wireframe : false });

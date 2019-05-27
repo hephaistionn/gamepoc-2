@@ -35,7 +35,7 @@ export default class Scene {
     this.joystick = nipplejs.create(options);
     this.joystick.on('move', (evt, data) => {
       if(this.onTouchMouve)
-        this.onTouchMouve(Math.min(data.force, 3), data.angle.radian);
+        this.onTouchMouve(Math.min(data.force, 2), data.angle.radian);
     });
 
     this.joystick.on('end', () => {
