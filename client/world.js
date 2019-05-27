@@ -17,9 +17,9 @@ export default class World extends Scene {
     for(let i=0; i<500; i++) {
       const random = (1 + Math.random() * 2);
       this.feeds[i] = new Feed({
-        x: Math.floor((Math.random()-0.5) * 200 ),
+        x: Math.floor((Math.random()-0.5) * 160 ),
         y: 0,
-        z: Math.floor((Math.random()-0.5) * 200 ),
+        z: Math.floor((Math.random()-0.5) * 160 ),
         scale: Math.round(random * random * random / 9)
       });
       this.add(this.feeds[i]);

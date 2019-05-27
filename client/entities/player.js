@@ -57,19 +57,30 @@ export default class Player extends Entity {
     let feed;
     let marginFeed;
     let margin;
+    let overlapX;
+    let overlapZ;
     for (let i in feeds) {
       feed = feeds[i];
       marginFeed = feed.size * feed.scale;
       margin = (marginFeed + marginPlayer)/2;
-      if(Math.abs(x-feed.x)<margin && Math.abs(z-feed.z)<margin) {
+      overlapX = Math.abs(x-feed.x);
+      overlapZ = Math.abs(z-feed.z);
+      if(overlapX<margin && overlapZ<margin) {
         if(marginPlayer > marginFeed) {
           feed.onDismount();
           feeds.splice(i, 1);
           this.scale += feed.getValue();
           i--;
         } else {
-          this.retroForceX = -(this.forceX+this.retroForceX) * dt * this.rebound * marginFeed/marginPlayer;
-          this.retroForceZ = -(this.forceZ+this.retroForceZ) * dt * this.rebound * marginFeed/marginPlayer;
+          // rebound
+          if(overlapZ>overlapX) {
+            this.retroForceX = (this.forceX+this.retroForceX) * dt * this.rebound * marginFeed/marginPlayer
+            this.retroForceZ = -(this.forceZ+this.retroForceZ) * dt * this.rebound * marginFeed/marginPlayer;
+          } else {
+            this.retroForceX = -(this.forceX+this.retroForceX) * dt * this.rebound * marginFeed/marginPlayer;
+            this.retroForceZ = (this.forceZ+this.retroForceZ) * dt * this.rebound * marginFeed/marginPlayer;
+          }
+          //saturation
           this.retroForceX = Math.min(Math.abs(this.retroForceX), this.retroForceMax) * Math.sign(this.retroForceX);
           this.retroForceZ = Math.min(Math.abs(this.retroForceZ), this.retroForceMax) * Math.sign(this.retroForceZ);
           return;
