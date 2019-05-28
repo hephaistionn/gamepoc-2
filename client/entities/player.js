@@ -12,6 +12,7 @@ export default class Player extends Entity {
     this.element.receiveShadow = false;
     this.element.castShadow = true;
 
+    this.areaSize = config.areaSize;
     this.size = 1.2;
     this.forceX = 0;
     this.forceZ = 0;
@@ -54,6 +55,14 @@ export default class Player extends Entity {
     }
 
     const marginPlayer = this.size * this.scale;
+
+    //border limit
+    const borderLimit = (this.areaSize-marginPlayer)/2;
+    if(Math.abs(x)>borderLimit || Math.abs(z)>borderLimit) {
+      return;
+    }
+
+
     let feed;
     let marginFeed;
     let margin;

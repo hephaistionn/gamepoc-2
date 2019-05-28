@@ -10,8 +10,8 @@ export default class World extends Scene {
   init() {
     this.camera = new Camera({ x: 0, y: 40, z: 40, tX: 0, tZ: 0 });
     this.light = new Light({ x: -20, y: 40, z: 20 });
-    this.ground = new Ground({ x: 0, y: 0, z: 0 });
-    this.player = new Player({ x: 0, y: 0, z: 0 });
+    this.ground = new Ground({ x: 0, y: 0, z: 0 , size: 170 });
+    this.player = new Player({ x: 0, y: 0, z: 0, areaSize: 170 });
     this.feeds = [];
 
     for (let i = 0; i < 500; i++) {
