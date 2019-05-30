@@ -1,0 +1,46 @@
+
+.score {
+  position: relative;
+  margin: 5px auto;
+  width: 200px;
+  background: #9c9c9c;
+  display: flex;
+  justify-content: center;
+  font-size: 2rem;
+  &__value {
+    display: inline-block;
+    margin: 0.5rem;
+  }
+  &__unit {
+    display: inline-block;
+    margin: 0.5rem 0;
+  }
+}
+
+.paricles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  .particle {
+    position: absolute;
+    display: inline-block;
+    left: 50%;
+    top: 0;
+    opacity: 0;
+    transform: translateY(50vh);
+    font-weight: bold;
+    // transition: transform 500ms;
+    &.animation {
+      animation: powerup 500ms linear 1;
+    }
+
+    @keyframes powerup {
+      0%   { opacity: 1; transform: translateY(50vh)  }
+      50%   { opacity: 1; transform: translateY(45vh)  }
+      100% { opacity: 0; transform: translateY(0vh)  }
+    }
+  }
+  
+}

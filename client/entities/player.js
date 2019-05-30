@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import Entity from '../core/entity';
 import material from '../shaders/materialBlock';
+import ee from '../core/eventemitter';
 
 export default class Player extends Entity {
 
@@ -68,6 +69,7 @@ export default class Player extends Entity {
     let margin;
     let overlapX;
     let overlapZ;
+    let value;
     for (let i in feeds) {
       feed = feeds[i];
       marginFeed = feed.size * feed.scale;
@@ -78,7 +80,9 @@ export default class Player extends Entity {
         if (marginPlayer > marginFeed) {
           feed.onEat();
           feeds.splice(i, 1);
-          this.scale += feed.getValue();
+          value = feed.getValue();
+          this.scale += value;
+          ee.emit('scored', value);
           i--;
         } else {
           // rebound

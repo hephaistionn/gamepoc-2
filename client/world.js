@@ -4,6 +4,7 @@ import Light from './core/light';
 import Ground from './entities/ground';
 import Player from './entities/player';
 import Feed from './entities/feed';
+import Score from './ui/score';
 
 export default class World extends Scene {
 
@@ -12,6 +13,7 @@ export default class World extends Scene {
     this.light = new Light({ x: -20, y: 40, z: 20 });
     this.ground = new Ground({ x: 0, y: 0, z: 0 , size: 170 });
     this.player = new Player({ x: 0, y: 0, z: 0, areaSize: 170 });
+    this.score = new Score();
     this.feeds = [];
 
     for (let i = 0; i < 500; i++) {
@@ -29,6 +31,8 @@ export default class World extends Scene {
     this.add(this.light);
     this.add(this.ground);
     this.add(this.player);
+
+    this.score.addValue(this.player.scale);
   }
 
   update(dt) {
