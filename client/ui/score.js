@@ -18,15 +18,21 @@ export default class Score {
 
   addValue(value) {
     this.value += value;
-    this.value = Math.floor(this.value*100)/100;
-    this.domValue.textContent = this.value;
+    25000
+    if(this.value < 10) {
+      this.domValue.textContent = this.value+'00 K€';
+    } else if(this.value < 10000){
+      this.domValue.textContent = this.value/10+' M€';
+    }else {
+      this.domValue.textContent = this.value/1000+' B€';
+    }
     this.updateParticle(value)
   }
 
   updateParticle(value) {
     value = Math.floor(value*100)/100;
     const particle = this.particles[this.currentParticle];
-    particle.textContent = '+'+value;
+    particle.textContent = '+'+value+'00 k€';
     particle.className ='particle';
     this.currentParticle++;
     if(this.currentParticle >= this.particleCount)  this.currentParticle = 0;

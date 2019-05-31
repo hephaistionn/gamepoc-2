@@ -11,10 +11,6 @@
     display: inline-block;
     margin: 0.5rem;
   }
-  &__unit {
-    display: inline-block;
-    margin: 0.5rem 0;
-  }
 }
 
 .paricles {
@@ -33,7 +29,7 @@
     font-weight: bold;
     // transition: transform 500ms;
     &.animation {
-      animation: powerup 500ms linear 1;
+      animation: powerup 900ms linear 1;
     }
 
     @keyframes powerup {

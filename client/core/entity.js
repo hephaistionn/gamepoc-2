@@ -49,30 +49,32 @@ class Entity {
     return this.value;
   }
 
+
   addValue(value) {
     this.value += value;
-    if(this.value < 10) {
-      this.scale = 1;
-    } else if(this.value < 100) {
-      this.scale = 2;
-    } else if(this.value < 1000) {
-      this.scale = 4;
-    } else if(this.value < 10000) {
-      this.scale = 6;
-    } else if(this.value < 100000) {
-      this.scale = 8;
-    } else if(this.value < 1000000) {
-      this.scale = 10;
-    } else if(this.value < 10000000) {
-      this.scale = 12;
-    } else if(this.value < 100000000) {
-      this.scale = 15;
-    } else if(this.value < 1000000000) {
-      this.scale = 19;
-    } else if(this.value < 10000000000) {
-      this.scale = 25;
-    } else if(this.value < 100000000000) {
-      this.scale = 32;
+    const totalPoint = 1000;
+    const sizeMax = 25;
+
+    if (this.value <= 0.001 * totalPoint) {
+      this.scale = Math.ceil(sizeMax * 0.01);
+    } else if (this.value <= 0.008 * totalPoint) {
+      this.scale = Math.ceil(sizeMax * 0.04);
+    } else if (this.value <= 0.027 * totalPoint) {
+      this.scale = Math.ceil(sizeMax * 0.09);
+    } else if (this.value <= 0.064 * totalPoint) {
+      this.scale = Math.ceil(sizeMax * 0.16);
+    } else if (this.value <= 0.125 * totalPoint) {
+      this.scale = Math.ceil(sizeMax * 0.25);
+    } else if (this.value <= 0.216 * totalPoint) {
+      this.scale = Math.ceil(sizeMax * 0.36);
+    } else if (this.value <= 0.343 * totalPoint) {
+      this.scale = Math.ceil(sizeMax * 0.49);
+    } else if (this.value <= 0.512 * totalPoint) {
+      this.scale = Math.ceil(sizeMax * 0.64);
+    } else if (this.value <= 0.729 * totalPoint) {
+      this.scale = Math.ceil(sizeMax * 0.81);
+    } else if (this.value <= 1 * totalPoint) {
+      this.scale = sizeMax * 1;
     }
   }
 

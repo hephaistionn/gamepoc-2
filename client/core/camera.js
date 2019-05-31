@@ -25,7 +25,7 @@ export default class Camera {
 
   update(dt) {
     const delta = this.zoomTarget - this.zoom;
-    this.zoom += delta *  dt * 0.005;
+    this.zoom += delta *  dt * 0.001;
   }
 
   resize(width, height) {
@@ -34,7 +34,7 @@ export default class Camera {
   }
 
   scale(zoom) {
-    this.zoomTarget = zoom/2;
+    this.zoomTarget = zoom;
   }
 
   move(x, y, z) {

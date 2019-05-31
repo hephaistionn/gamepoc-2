@@ -32,7 +32,7 @@ export default class World extends Scene {
     this.camera.update(dt);
     this.camera.moveTarget(this.player.x, this.player.y, this.player.z);
     this.light.moveTarget(this.player.x, this.player.y, this.player.z);
-    this.camera.scale(this.player.scale);
+    this.camera.scale(0.1+this.player.scale/4);
     this.light.scale(this.player.scale);
 
     for (let i = Feed.dying.length - 1; i > -1; i--) {
@@ -51,34 +51,38 @@ export default class World extends Scene {
 
   populate() {
 
+    const maxValue = 1000;
+    // x * x * x
     var categories = [ 
-      { value: 1000000000, count: 1 },
-      { value: 100000000, count: 2 },
-      { value: 10000000, count: 4 },
-      { value: 1000000, count: 8 },
-      { value: 100000, count: 16 },
-      { value: 10000, count: 32 },
-      { value: 1000, count: 64 },
-      { value: 100, count: 128 },
-      { value: 10, count:256 },
-      { value: 1, count: 513 }
+      { value: maxValue * 1, count: 1 },
+      { value: maxValue * 0.729, count: 2 },
+      { value: maxValue * 0.512, count: 4 },
+      { value: maxValue * 0.343, count: 8 },
+      { value: maxValue * 0.216, count: 16 },
+      { value: maxValue * 0.125, count: 32 },
+      { value: maxValue * 0.064, count: 64 },
+      { value: maxValue * 0.027, count: 128 },
+      { value: maxValue * 0.008, count: 256 },
+      { value: maxValue * 0.001, count: 800 }
     ];
 
 
-
+    let ctb = 0;
     for (let i in categories) {
       const category = categories[i];
       while (category.count) {
-        const x = Math.floor((Math.random() - 0.5) * 230);
-        const z = Math.floor((Math.random() - 0.5) * 230);
+        const x = Math.floor((Math.random() - 0.5) * 180);
+        const z = Math.floor((Math.random() - 0.5) * 180);
+        console.log(category.value)
         const feed = new Feed({ x, y: 0, z, value: category.value });
         if (feed.freePosition(this.feeds)) {
           this.feeds.push(feed);
+          ctb++;
           this.add(feed);
-          console.log(category.value + ' count : ' + category.count);
           category.count--
         }
       }
     }
+    console.log('mobs : ',ctb);
   }
 }

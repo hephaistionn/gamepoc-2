@@ -58,8 +58,8 @@ export default class Player extends Entity {
     const marginPlayer = this.size * this.scale;
 
     //border limit
-    const borderLimit = (this.areaSize-marginPlayer)/2;
-    if(Math.abs(x)>borderLimit || Math.abs(z)>borderLimit) {
+    const borderLimit = (this.areaSize - marginPlayer) / 2;
+    if (Math.abs(x) > borderLimit || Math.abs(z) > borderLimit) {
       return;
     }
 
@@ -101,6 +101,33 @@ export default class Player extends Entity {
       }
     }
     this.move(x, 0, z);
+  }
+
+  addValue(value) {
+    this.value += value;
+    const totalPoint = 25000;
+    const sizeMax = 25;
+    if (this.value < 0.0009*totalPoint) {
+      this.scale = Math.ceil(sizeMax * 0.01);
+    } else if (this.value < 0.008*totalPoint) {
+      this.scale = Math.ceil(sizeMax * 0.04);
+    } else if (this.value < 0.027*totalPoint) {
+      this.scale = Math.ceil(sizeMax * 0.09);
+    } else if (this.value < 0.064*totalPoint) {
+      this.scale = Math.ceil(sizeMax * 0.16);
+    } else if (this.value < 0.125*totalPoint) {
+      this.scale = Math.ceil(sizeMax * 0.25);
+    } else if (this.value < 0.216*totalPoint) {
+      this.scale = Math.ceil(sizeMax * 0.36);
+    } else if (this.value < 0.343*totalPoint) {
+      this.scale = Math.ceil(sizeMax * 0.49);
+    } else if (this.value < 0.512*totalPoint) {
+      this.scale = Math.ceil(sizeMax * 0.64);
+    } else if (this.value < 0.729*totalPoint) {
+      this.scale = Math.ceil(sizeMax * 0.81);
+    } else if (this.value < 1*totalPoint) {
+      this.scale = sizeMax * 1;
+    }
   }
 }
 
