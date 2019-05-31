@@ -14,7 +14,7 @@ export default class Player extends Entity {
     this.element.castShadow = true;
 
     this.areaSize = config.areaSize;
-    this.size = 1.2;
+    this.size = 1;
     this.forceX = 0;
     this.forceZ = 0;
     this.retroForceX = 0;
@@ -77,11 +77,11 @@ export default class Player extends Entity {
       overlapX = Math.abs(x - feed.x);
       overlapZ = Math.abs(z - feed.z);
       if (overlapX < margin && overlapZ < margin) {
-        if (marginPlayer > marginFeed) {
+        if (marginPlayer >= marginFeed) {
           feed.onEat();
           feeds.splice(i, 1);
           value = feed.getValue();
-          this.scale += value;
+          this.addValue(value);
           ee.emit('scored', value);
           i--;
         } else {

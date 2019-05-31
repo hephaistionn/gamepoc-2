@@ -8,10 +8,11 @@ class Entity {
     this.y = config.y;
     this.z = config.z;
     this.a = config.a || 0;
-    this.scale = config.scale || 1;
+    this.scale = 1;
     this.dead = false;
     this.size = 1;
-    this.value = 0.04;
+    this.value = 0;
+    this.addValue(config.value || 1);
   }
 
   move(x, y, z) {
@@ -45,7 +46,52 @@ class Entity {
   }
 
   getValue() {
-    return this.scale * this.value;
+    return this.value;
+  }
+
+  addValue(value) {
+    this.value += value;
+    if(this.value < 10) {
+      this.scale = 1;
+    } else if(this.value < 100) {
+      this.scale = 2;
+    } else if(this.value < 1000) {
+      this.scale = 4;
+    } else if(this.value < 10000) {
+      this.scale = 6;
+    } else if(this.value < 100000) {
+      this.scale = 8;
+    } else if(this.value < 1000000) {
+      this.scale = 10;
+    } else if(this.value < 10000000) {
+      this.scale = 12;
+    } else if(this.value < 100000000) {
+      this.scale = 15;
+    } else if(this.value < 1000000000) {
+      this.scale = 19;
+    } else if(this.value < 10000000000) {
+      this.scale = 25;
+    } else if(this.value < 100000000000) {
+      this.scale = 32;
+    }
+  }
+
+  checkCollision(block) {
+    const margin1 = this.size * this.scale;
+    const margin2 = block.size * block.scale;
+    const margin = (margin1 + margin2) / 2;
+    const overlapX = Math.abs(this.x - block.x);
+    const overlapZ = Math.abs(this.z - block.z);
+    return overlapX < margin && overlapZ < margin
+  }
+
+  freePosition(blocks) {
+    for(let i in blocks) {
+      if(this.checkCollision(blocks[i])) {
+        return false;
+      }
+    }
+    return true;
   }
 
   onEat() {
