@@ -13,10 +13,16 @@ class Feed extends Entity {
     this.element.castShadow = true;
     this.element.material.color.setHex(Math.random() * 0xffffff);
     this.move(config.x, config.y, config.z);
+    this.constructor.elements.push(this.element);
+  }
+
+  onPostDismount() {
+    const i = this.constructor.elements.indexOf(this.element);
+    this.constructor.elements.splice(i, 1);
   }
 
 }
 
-Feed.dying = [];
+Feed.elements = [];
 
 export default Feed;

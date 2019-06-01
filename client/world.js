@@ -16,6 +16,7 @@ export default class World extends Scene {
     this.player = new Player({ x: 0, y: 0, z: 0, areaSize: 300 });
     this.score = new Score();
     this.feeds = [];
+    this.interObject = null;
 
     this.populate();
 
@@ -39,10 +40,19 @@ export default class World extends Scene {
       const feed = Feed.dying[i];
       feed.update(dt);
     }
+
+    if(this.interObject) {
+      this.interObject.material.opacity = 1;
+    }
+    const object = this.camera.checkIntersection(Feed.elements);
+    if(object[0]) {
+      object[0].object.material.opacity = 0.5;
+      this.interObject =  object[0].object;
+    }
   }
 
   onTouchMouve(force, angle) {
-    this.player.setForce(force, angle);
+    this.player.setForce(force, angle);  
   }
 
   onTouchEnd() {
@@ -67,22 +77,27 @@ export default class World extends Scene {
     ];
 
 
-    let ctb = 0;
     for (let i in categories) {
       const category = categories[i];
       while (category.count) {
         const x = Math.floor((Math.random() - 0.5) * 180);
         const z = Math.floor((Math.random() - 0.5) * 180);
-        console.log(category.value)
         const feed = new Feed({ x, y: 0, z, value: category.value });
         if (feed.freePosition(this.feeds)) {
           this.feeds.push(feed);
-          ctb++;
           this.add(feed);
           category.count--
         }
       }
     }
-    console.log('mobs : ',ctb);
+
+    let ready = false
+    while (this.player.x === 0 && this.player.z === 0) {
+      const x = Math.floor((Math.random() - 0.5) * 180);
+      const z = Math.floor((Math.random() - 0.5) * 180);
+      this.player.move(x, 0, z);
+      ready = this.player.freePosition(this.feeds);
+    }
+
   }
 }

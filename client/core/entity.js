@@ -111,6 +111,11 @@ class Entity {
     this.element.material.dispose();
     this.parent.element.remove(this.element);
     this.parent = null;
+    this.onPostDismount();
+  }
+
+  onPostDismount() {
+
   }
 
 };

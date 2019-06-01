@@ -6,6 +6,8 @@ export default class Camera {
     const canvas = document.getElementById('D3');
     this.element = new THREE.PerspectiveCamera(25, canvas.clientWidth / canvas.clientHeight, 0.1, 3000);
     this.target = new THREE.Vector3();
+    this.raycaster = new THREE.Raycaster();
+    this.centerScreen = new THREE.Vector2(0,0);
 
     this.x = config.x;
     this.y = config.y;
@@ -63,6 +65,11 @@ export default class Camera {
 
     this.element.lookAt(this.target);
     this.element.updateProjectionMatrix();
+  }
+
+  checkIntersection(list) {
+    this.raycaster.setFromCamera(this.centerScreen, this.element);
+    return this.raycaster.intersectObjects(list);
   }
 
   onMount(parent) {
