@@ -17,12 +17,7 @@ export default class Player extends Entity {
     this.size = 1;
     this.forceX = 0;
     this.forceZ = 0;
-    this.retroForceX = 0;
-    this.retroForceZ = 0;
-    this.retroForceMax = 0.02;
     this.forceFactor = 0.003;
-    this.rebound = 0.1;
-    this.debound = 0.008
 
     this.move(config.x, config.y, config.z);
   }
@@ -39,21 +34,8 @@ export default class Player extends Entity {
   }
 
   update(dt, feeds) {
-    let x = this.x + (this.forceX + this.retroForceX) * dt;
-    let z = this.z + (this.forceZ + this.retroForceZ) * dt;
-
-    const eX = 0 - this.retroForceX;
-    const eZ = 0 - this.retroForceZ;
-
-    this.retroForceX += eX * dt * this.debound;
-    this.retroForceZ += eZ * dt * this.debound;
-
-    if (Math.abs(this.retroForceX) < 0.0001) {
-      this.retroForceX = 0;
-    }
-    if (Math.abs(this.retroForceZ) < 0.0001) {
-      this.retroForceZ = 0;
-    }
+    let x = this.x + this.forceX * dt;
+    let z = this.z + this.forceZ * dt;
 
     const marginPlayer = this.size * this.scale;
 
@@ -85,18 +67,19 @@ export default class Player extends Entity {
           ee.emit('scored', value);
           i--;
         } else {
-          // rebound
-          if (Math.abs(this.forceZ) > Math.abs(this.forceX)) {
-            this.retroForceX = (this.forceX + this.retroForceX) * dt * this.rebound * marginFeed / marginPlayer
-            this.retroForceZ = -(this.forceZ + this.retroForceZ) * dt * this.rebound * marginFeed / marginPlayer;
+          if (overlapX > overlapZ) {
+            if(x > feed.x) {
+              x = feed.x+margin;
+            }else {
+              x = feed.x-margin;
+            }
           } else {
-            this.retroForceX = -(this.forceX + this.retroForceX) * dt * this.rebound * marginFeed / marginPlayer;
-            this.retroForceZ = (this.forceZ + this.retroForceZ) * dt * this.rebound * marginFeed / marginPlayer;
+            if(z > feed.z) {
+              z = feed.z+margin;
+            }else {
+              z = feed.z-margin;
+            }
           }
-          //saturation
-          this.retroForceX = Math.min(Math.abs(this.retroForceX), this.retroForceMax) * Math.sign(this.retroForceX);
-          this.retroForceZ = Math.min(Math.abs(this.retroForceZ), this.retroForceMax) * Math.sign(this.retroForceZ);
-          return;
         }
       }
     }
