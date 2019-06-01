@@ -5,7 +5,6 @@ import Ground from './entities/ground';
 import Player from './entities/player';
 import Feed from './entities/feed';
 import Score from './ui/score';
-import { reverse } from 'dns';
 
 export default class World extends Scene {
 
@@ -16,7 +15,9 @@ export default class World extends Scene {
     this.player = new Player({ x: 0, y: 0, z: 0, areaSize: 300 });
     this.score = new Score();
     this.feeds = [];
-    this.interObject = null;
+    this.interObject1 = null;
+    this.interObject5 = null;
+    this.tempo = 0;
 
     this.populate();
 
@@ -41,13 +42,31 @@ export default class World extends Scene {
       feed.update(dt);
     }
 
-    if(this.interObject) {
-      this.interObject.material.opacity = 1;
-    }
-    const object = this.camera.checkIntersection(Feed.elements);
-    if(object[0]) {
-      object[0].object.material.opacity = 0.5;
-      this.interObject =  object[0].object;
+    this.viewObstructed(dt)
+
+  }
+
+  viewObstructed(dt) {
+    this.tempo += dt;
+    if(this.tempo > 320) {
+      this.tempo = 0;
+      if(this.interObject1) {
+        this.interObject1.material.opacity = 1;
+        this.interObject1 = null;
+      }
+      if(this.interObject2) {
+        this.interObject2.material.opacity = 1;
+        this.interObject2 = null;
+      }
+      const objects = this.camera.checkIntersection(Feed.elements);
+      if(objects[0]) {
+        objects[0].object.material.opacity = 0.5;
+        this.interObject1 = objects[0].object;
+      }
+      if(objects[1]) {
+        objects[1].object.material.opacity = 0.5;
+        this.interObject2 =  objects[1].object;
+      }
     }
   }
 
