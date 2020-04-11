@@ -1,5 +1,4 @@
 import * as THREE from 'three';
-import ee from './eventemitter';
 import nipplejs from 'nipplejs';
 
 export default class Scene {
@@ -34,8 +33,11 @@ export default class Scene {
     };
     this.joystick = nipplejs.create(options);
     this.joystick.on('move', (evt, data) => {
-      if(this.onTouchMouve)
+      if(this.onTouchMouve) {
+        data.angle.radian+=Math.PI/4; //camera angle
+        console.log(data.angle.radian)
         this.onTouchMouve(Math.min(data.force, 2), data.angle.radian);
+      }
     });
 
     this.joystick.on('end', () => {

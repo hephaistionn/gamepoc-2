@@ -23,6 +23,13 @@ class Feed extends Entity {
 
 }
 
+Feed.update = function update(dt) {
+  for (let i = Feed.dying.length - 1; i > -1; i--) {
+    const feed = Feed.dying[i];
+    feed.update(dt);
+  }
+}
+
 Feed.elements = [];
 
 export default Feed;

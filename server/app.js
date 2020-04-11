@@ -1,10 +1,19 @@
+const app = require('express')();
 const express = require('express');
-const app = express();
+const http = require('http');
+const path = require('path');
 
-app.use(express.static('build'));
-app.use(express.static('assets'));
+app.set('view engine', 'ejs');
+app.set('views', path.resolve(__dirname + '/views'));
 
-const port = process.env.PORT || 3000;
-const server = app.listen(port, function() {
-    console.info('server start on port ' + port);
+app.use(express.urlencoded());
+
+app.use('/', express.static(path.normalize('.dist')));
+app.use('/assets', express.static(path.normalize('assets')));
+app.get('/', (req, res) => {
+  res.render('index.ejs');
+});
+
+http.createServer(app).listen(process.env.PORT || 3000, function () {
+  console.info("[Express] server listening on port " + process.env.PORT || 3000);
 });

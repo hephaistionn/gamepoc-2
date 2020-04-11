@@ -90,9 +90,9 @@ export default class Player extends Entity {
     this.value += value;
     const totalPoint = 25000;
     const sizeMax = 25;
-    if (this.value < 0.0009*totalPoint) {
+    if (this.value < 0.0004*totalPoint) {
       this.scale = Math.ceil(sizeMax * 0.01);
-    } else if (this.value < 0.008*totalPoint) {
+    } else if (this.value < 0.005*totalPoint) {
       this.scale = Math.ceil(sizeMax * 0.04);
     } else if (this.value < 0.027*totalPoint) {
       this.scale = Math.ceil(sizeMax * 0.09);

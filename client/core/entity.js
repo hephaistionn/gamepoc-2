@@ -34,8 +34,8 @@ class Entity {
     matrixWorld[10] *= this.scale;
   }
 
-  update(dt) {
-    if (this.scale > 0.3) {
+  update(dt) { //only called for dying entity
+    if (this.scale > 0.3) { 
       this.scale -= dt * 0.006;
       this.move(this.x, 0, this.z);
     } else {

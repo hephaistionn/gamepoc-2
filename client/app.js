@@ -1,16 +1,14 @@
-import ee from './core/eventemitter';
 import World from './world';
+import populator from './populator';
+
+
 
 window.addEventListener('load', () => {
-    const scene = new World();
+    const world = new World();
+    
+    populator(world)
 
-    ee.on('stopScreen', () => {
-        scene.stop();
-    });
+    world.start();
 
-    ee.on('startScreen', () => {
-        scene.start();
-    });
 
-    ee.emit('startScreen');
 });

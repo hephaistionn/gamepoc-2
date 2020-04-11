@@ -2,7 +2,7 @@ import ee from '../core/eventemitter';
 
 export default class Score {
 
-  constructor(config) {
+  constructor() {
     this.domValue = document.getElementById('score_value');
     this.domParticles = document.getElementById('particles');
     this.value = 0;
