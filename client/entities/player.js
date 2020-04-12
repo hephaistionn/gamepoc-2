@@ -15,6 +15,7 @@ export default class Player extends Entity {
     this.element.matrixAutoUpdate = false;
     this.element.receiveShadow = false;
     this.element.castShadow = true;
+    this.element.name = 'player';
 
     this.areaSize = config.areaSize;
     this.forceX = 0;

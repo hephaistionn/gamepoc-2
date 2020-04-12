@@ -15,7 +15,7 @@ class Effect {
 
   viewObstructed(dt, camera) {
     this.tempo += dt;
-    if(this.tempo > 200) {
+    if(this.tempo > 50) {
       this.tempo = 0;
       if(this.intersectionObject1) {
         this.intersectionObject1.material.opacity = 1;
