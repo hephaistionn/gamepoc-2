@@ -45,10 +45,6 @@ class Entity {
     }
   }
 
-  getValue() {
-    return this.value;
-  }
-
 
   addValue(value) {
     this.value += value;
@@ -99,6 +95,7 @@ class Entity {
   onEat() {
     this.dead = true;
     this.constructor.dying.push(this);
+    return this.value;
   }
 
   onMount(parent) {

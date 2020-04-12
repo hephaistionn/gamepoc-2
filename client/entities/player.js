@@ -60,11 +60,9 @@ export default class Player extends Entity {
       overlapZ = Math.abs(z - feed.z);
       if (overlapX < margin && overlapZ < margin) {
         if (marginPlayer >= marginFeed) {
-          feed.onEat();
-          feeds.splice(i, 1);
-          value = feed.getValue();
+          value = feed.onEat();
           this.addValue(value);
-          ee.emit('scored', value);
+          feeds.splice(i, 1);
           i--;
         } else {
           if (overlapX > overlapZ) {
@@ -111,6 +109,7 @@ export default class Player extends Entity {
     } else if (this.value < 1*totalPoint) {
       this.scale = sizeMax * 1;
     }
+    ee.emit('scored', value);
   }
 }
 

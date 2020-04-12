@@ -35,7 +35,6 @@ export default class Scene {
     this.joystick.on('move', (evt, data) => {
       if(this.onTouchMouve) {
         data.angle.radian+=Math.PI/4; //camera angle
-        console.log(data.angle.radian)
         this.onTouchMouve(Math.min(data.force, 2), data.angle.radian);
       }
     });

@@ -12,34 +12,28 @@ export default class Score {
 
     this.prepareParticle();
     ee.on('scored', value =>{
-      this.addValue(value);
+      this.updateScore(value);
     })
   }
 
-  addValue(value) {
-    this.value += value;
-    25000
-    if(this.value < 10) {
-      this.domValue.textContent = this.value+'00 K€';
-    } else if(this.value < 10000){
-      this.domValue.textContent = this.value/10+' M€';
-    }else {
-      this.domValue.textContent = this.value/1000+' B€';
-    }
-    this.updateParticle(value)
+  updateScore(value) {
+    this.updateParticle(value);
   }
 
   updateParticle(value) {
     value = Math.floor(value*100)/100;
     const particle = this.particles[this.currentParticle];
-    particle.textContent = '+'+value+'00 k€';
+    particle.textContent = '+'+value;
     particle.className ='particle';
     this.currentParticle++;
     if(this.currentParticle >= this.particleCount)  this.currentParticle = 0;
     setTimeout(()=> {
       particle.className ='particle animation';
     },1)
-    
+    setTimeout(()=> {
+      this.value += value;
+      this.domValue.textContent = this.value;
+    },750)
   }
 
   prepareParticle(value) {
