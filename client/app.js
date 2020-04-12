@@ -1,12 +1,12 @@
 import World from './world';
-import populator from './populator';
+import config from './config';
 
 
 
 window.addEventListener('load', () => {
     const world = new World();
     
-    populator(world)
+    config.populate(world)
 
     world.start();
 

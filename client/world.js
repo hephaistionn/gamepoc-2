@@ -1,4 +1,5 @@
 import Scene from './core/scene'
+import config from './config';
 
 import Effect from './core/effect';
 import Light from './core/light';
@@ -13,9 +14,9 @@ export default class World extends Scene {
 
   init() {
     this.camera = new Camera({deltaX: 40, deltaY: 40, deltaZ: 40});
-    this.light = new Light({ deltaX: -20, deltaY: 40, deltaZ: 20 });
-    this.ground = new Ground({ x: 0, y: 0, z: 0, size: 300 });
-    this.player = new Player({ x: 0, y: 0, z: 0, areaSize: 300 });
+    this.light = new Light({ deltaX: -0.3, deltaY: 1, deltaZ: 0.3 });
+    this.ground = new Ground({ x: 0, y: 0, z: 0, size: config.worldSize });
+    this.player = new Player({ x: 0, y: 0, z: 0, areaSize: config.worldSize });
     this.score = new Score();
     this.effect = new Effect();
     this.feeds = [];

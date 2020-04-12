@@ -4,16 +4,16 @@ export default class Light {
 
   constructor(config) {
     this.element = new THREE.Object3D();
-    this.ambient = new THREE.AmbientLight(0x888888);
+    this.ambient = new THREE.AmbientLight(0x999999);
     this.directionalLight = new THREE.DirectionalLight(0x888888);
     this.directionalLight.matrixAutoUpdate = false;
     this.directionalLight.castShadow = true;
-    this.directionalLight.shadow = new THREE.LightShadow(new THREE.OrthographicCamera(-40, 40, 40, -40, 1, 350));
+    this.directionalLight.shadow = new THREE.LightShadow(new THREE.OrthographicCamera(-1, 1, 1, -1, 1, 4000));
     this.directionalLight.shadow.bias = 0.001;
-    this.directionalLight.shadow.radius = 0.8;
-    this.directionalLight.shadow.mapSize.width = 2024;
-    this.directionalLight.shadow.mapSize.height = 2024;
-    new THREE.Matrix4().makeRotationZ( Math.PI / 2).multiplyVector3( this.directionalLight.shadow.camera.up );//axe up
+    this.directionalLight.shadow.radius = 0.9; //blur 
+    this.directionalLight.shadow.mapSize.width = 2048;
+    this.directionalLight.shadow.mapSize.height = 2048;
+    new THREE.Matrix4().makeRotationZ( Math.PI/4).multiplyVector3( this.directionalLight.shadow.camera.up );//axe up
     this.element.add(this.ambient);
     this.element.add(this.directionalLight);
 
@@ -21,20 +21,21 @@ export default class Light {
     this.offsetY = config.deltaY;
     this.offsetZ = config.deltaZ;
 
-    this.zoom = 1;
+    this.zoom = 100;
 
     this.move(0, 0, 0);
   }
 
   move(x, y, z) {
-    this.directionalLight.matrix.elements[12] = x + this.offsetX * this.zoom;
-    this.directionalLight.matrix.elements[13] = y + this.offsetY * this.zoom;
-    this.directionalLight.matrix.elements[14] = z + this.offsetZ * this.zoom;
+    this.directionalLight.matrix.elements[12] = x + this.offsetX * 400;
+    this.directionalLight.matrix.elements[13] = y + this.offsetY * 400;
+    this.directionalLight.matrix.elements[14] = z + this.offsetZ * 400
     this.directionalLight.target.matrixWorld.elements[12] = x;
     this.directionalLight.target.matrixWorld.elements[13] = y;
     this.directionalLight.target.matrixWorld.elements[14] = z;
 
-    this.directionalLight.shadow.camera.zoom = 3/this.zoom;
+    //this.directionalLight.shadow.camera.zoom = 0.014; for scale 5
+    this.directionalLight.shadow.camera.zoom = 0.07/this.zoom;
     this.directionalLight.shadow.camera.updateProjectionMatrix();
   }
 
@@ -43,8 +44,8 @@ export default class Light {
   }
 
   update(dt, target) {
-    this.move(target.x, target.y, target.z);
     this.scale(target.scale);
+    this.move(target.x, target.y, target.z);
   }
 
   onMount(parent) {

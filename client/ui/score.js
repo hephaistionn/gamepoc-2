@@ -1,4 +1,5 @@
 import ee from '../core/eventemitter';
+import config from '../config';
 
 export default class Score {
 
@@ -6,22 +7,28 @@ export default class Score {
     this.domValue = document.getElementById('score_value');
     this.domParticles = document.getElementById('particles');
     this.value = 0;
+    this.level = 1;
     this.particleCount = 10;
     this.particles = [];
     this.currentParticle = 0;
 
     this.prepareParticle();
-    ee.on('scored', value =>{
-      this.updateScore(value);
+    ee.on('scored', data =>{
+      this.updateScore(data.sum, data.value);
+    })
+    ee.on('leveled', level =>{
+      this.level = level; 
     })
   }
 
-  updateScore(value) {
+  updateScore(sum, value) {
     this.updateParticle(value);
+    this.value = sum;
+    this.domValue.textContent = 'lvl '+ this.level  + ' score : '+ this.value + '/' +config.categories[this.level].value;
   }
 
   updateParticle(value) {
-    value = Math.floor(value*100)/100;
+    /*value = Math.floor(value*100)/100;
     const particle = this.particles[this.currentParticle];
     particle.textContent = '+'+value;
     particle.className ='particle';
@@ -29,11 +36,8 @@ export default class Score {
     if(this.currentParticle >= this.particleCount)  this.currentParticle = 0;
     setTimeout(()=> {
       particle.className ='particle animation';
-    },1)
-    setTimeout(()=> {
-      this.value += value;
-      this.domValue.textContent = this.value;
-    },750)
+    },1)*/
+
   }
 
   prepareParticle(value) {

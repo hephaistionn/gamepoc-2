@@ -6,7 +6,9 @@ class Feed extends Entity {
 
   constructor(config) {
     super(config);
-    const geometry = new THREE.BoxGeometry(this.size, this.size, this.size);
+    this.scale = config.scale;
+    this.value = config.value;
+    const geometry = new THREE.BoxGeometry(1, 1, 1);
     this.element = new THREE.Mesh(geometry, material.clone());
     this.element.matrixAutoUpdate = false;
     this.element.receiveShadow = false;
@@ -20,7 +22,6 @@ class Feed extends Entity {
     const i = this.constructor.elements.indexOf(this.element);
     this.constructor.elements.splice(i, 1);
   }
-
 }
 
 Feed.update = function update(dt) {

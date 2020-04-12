@@ -4,7 +4,7 @@ export default class Camera {
 
   constructor(config) {
     const canvas = document.getElementById('D3');
-    this.element = new THREE.PerspectiveCamera(25, canvas.clientWidth / canvas.clientHeight, 0.1, 3000);
+    this.element = new THREE.PerspectiveCamera(25, canvas.clientWidth / canvas.clientHeight, 0.1, 4000);
     this.raycaster = new THREE.Raycaster();
     this.centerScreen = new THREE.Vector2(0,0);
 
@@ -44,7 +44,7 @@ export default class Camera {
   }
 
   update(dt, target) {
-    this.zoomTarget = 0.1 + target.scale/4; //pre-set la valeur de somme coté palyer
+    this.zoomTarget = target.scale/6;
     const delta = this.zoomTarget - this.zoom;
     this.zoom += delta *  dt * 0.001;
     this.move(target.x, target.y, target.z);
