@@ -26,8 +26,8 @@ export default {
   worldSize,
 }
 
-function populate(world) {
-
+function populate(player) {
+  const feeds = [];
   const total = categories.length-1;
   for (let i=total; i>-1; i--) {
     const category = categories[i];
@@ -37,21 +37,20 @@ function populate(world) {
       let x, z;
       if(category.factor===128) {
         if(Math.random()>0.5) {
-          x = Math.floor((Math.random() - 0.5) * (world.ground.size-(category.factor*3)));
-          z = Math.floor(-0.5 * (world.ground.size-category.factor));
+          x = Math.floor((Math.random() - 0.5) * (worldSize-(category.factor*3)));
+          z = Math.floor(-0.5 * (worldSize-category.factor));
         } else {
-          x = Math.floor(-0.5 * (world.ground.size-category.factor));
-          z = Math.floor((Math.random() - 0.5) * (world.ground.size-(category.factor*3)));
+          x = Math.floor(-0.5 * (worldSize-category.factor));
+          z = Math.floor((Math.random() - 0.5) * (worldSize-(category.factor*3)));
         }
       } else {
-        x = Math.floor((Math.random() - 0.5) * (world.ground.size-category.factor));
-        z = Math.floor((Math.random() - 0.5) * (world.ground.size-category.factor));
+        x = Math.floor((Math.random() - 0.5) * (worldSize-category.factor));
+        z = Math.floor((Math.random() - 0.5) * (worldSize-category.factor));
       }
 
       const feed = new Feed({ x, y: 0, z, value: category.value, scale:category.factor});
-      if (feed.freePosition(world.feeds)) {
-        world.feeds.push(feed);
-        world.add(feed);
+      if (feed.freePosition(feeds)) {
+        feeds.push(feed);
         category.count--
       } else {
         attempt++
@@ -65,11 +64,12 @@ function populate(world) {
   }
 
   let ready = false
-  while (world.player.x === 0 && world.player.z === 0 && !ready) {
-    const x = Math.floor((Math.random() - 0.5) * world.ground.size*0.95);
-    const z = Math.floor((Math.random() - 0.5) * world.ground.size*0.95);
-    world.player.move(x, 0, z);
-    ready = world.player.freePosition(world.feeds);
+  while (player.x === 0 && player.z === 0 && !ready) {
+    const x = Math.floor((Math.random() - 0.5) * worldSize*0.95);
+    const z = Math.floor((Math.random() - 0.5) * worldSize*0.95);
+    player.move(x, 0, z);
+    ready = player.freePosition(feeds);
   }
 
+  return feeds;
 }

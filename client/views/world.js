@@ -1,13 +1,13 @@
-import Scene from './core/scene'
-import config from './config';
+import Scene from '../core/scene'
+import config from '../config';
 
-import Effect from './core/effect';
-import Light from './core/light';
-import Camera from './core/camera';
-import Ground from './entities/ground';
-import Player from './entities/player';
-import Feed from './entities/feed';
-import Score from './ui/score';
+import Effect from '../core/effect';
+import Light from '../core/light';
+import Camera from '../core/camera';
+import Ground from '../entities/ground';
+import Player from '../entities/player';
+import Feed from '../entities/feed';
+import Score from '../ui/score';
 
 
 export default class World extends Scene {
@@ -19,13 +19,15 @@ export default class World extends Scene {
     this.player = new Player({ x: 0, y: 0, z: 0, areaSize: config.worldSize });
     this.score = new Score();
     this.effect = new Effect();
-    this.feeds = [];
+    this.feeds = config.populate(this.player);
     this.tempo = 0;
 
     this.add(this.camera);
     this.add(this.light);
     this.add(this.ground);
     this.add(this.player);
+    this.add(this.feeds);
+    this.initJoystick();
   }
 
   update(dt) {
@@ -42,6 +44,15 @@ export default class World extends Scene {
 
   onTouchEnd() {
     this.player.setForce(0, 0);
+  }
+
+  dismount() {
+    this.remove(this.camera);
+    this.remove(this.light);
+    this.remove(this.ground);
+    this.remove(this.player);
+    this.remove(this.feeds);
+    this.stop();
   }
 
 }

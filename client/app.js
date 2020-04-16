@@ -1,14 +1,22 @@
-import World from './world';
-import config from './config';
-
-
+import World from './views/world';
+import Home from './ui/menu';
+import ee from './core/eventemitter';
 
 window.addEventListener('load', () => {
-    const world = new World();
-    
-    config.populate(world)
+  let view;
 
-    world.start();
+  ee.on('changeView', viewName => {
+    if (view) view.dismount();
 
+    switch (viewName) {
+      case 'home':
+        view = new Home();
+        break;
+      case 'world':
+        view = new World();
+        break;
+    }
+  });
 
+  ee.emit('changeView', 'world');
 });

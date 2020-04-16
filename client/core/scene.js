@@ -20,8 +20,8 @@ export default class Scene {
     document.body.appendChild( this.stats.dom );
 
     this.initEvents();
-    this.initJoystick();
     this.init();
+    this.start();
   }
 
   initEvents() {
@@ -81,18 +81,32 @@ export default class Scene {
   }
 
   add(child) {
-    child.onMount(this);
+    if(Array.isArray(child)) {
+      for(let i=0; i<child.length; i++) {
+        child[i].onMount(this);
+      }
+    } else {
+      child.onMount(this);
+    }
   }
 
-  remove(child) {s
-    child.onDismount();
+  remove(child) {
+    if(Array.isArray(child)) {
+      for(let i=0; i<child.length; i++) {
+        child[i].onDismount();
+      }
+    } else {
+      child.onDismount();
+    }
   }
 
   closeEvents() {
-    window.removeEventListener('resize', this._resize);
+    window.removeEventListener('resize', this._resize);;
   }
 
   closeJoystick() {
-    this.joystick.destroy();
+    if(this.joystick) {
+      this.joystick.destroy();
+    }
   }
 }

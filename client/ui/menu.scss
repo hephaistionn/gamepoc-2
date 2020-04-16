@@ -1,0 +1,16 @@
+.home {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: white;
+  &__title {
+    margin: 6rem;
+    font-size: 2rem;
+  }
+  &__button  {
+    margin: 6rem;
+    background-color: yellow;
+    padding: 1rem 3rem;
+  }
+
+}
