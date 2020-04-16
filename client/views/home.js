@@ -1,9 +1,11 @@
-import Scene from '../core/scene'
+import View from '../core/view';
+import Light from '../core/light';
+import Camera from '../core/camera';
 import config from '../config';
 import Menu from '../ui/menu';
 
 
-export default class Home extends Scene {
+export default class Home extends View {
 
   init() {
     this.camera = new Camera({deltaX: 40, deltaY: 40, deltaZ: 40});
@@ -18,9 +20,8 @@ export default class Home extends Scene {
 
   }
 
-  dismount() {
+  onDismount() {
     this.remove(this.camera);
     this.remove(this.light);
-    this.stop();
   }
 }

@@ -1,16 +1,16 @@
 .home {
-  position: absolute;
-  height: 100%;
-  width: 100%;
-  background-color: white;
   &__title {
-    margin: 6rem;
+    width: 15rem;
+    margin: 6rem auto;
     font-size: 2rem;
+    color: gray;
+    text-align: center;
   }
   &__button  {
-    margin: 6rem;
-    background-color: yellow;
+    width: 15rem;
+    margin: 6rem auto;
     padding: 1rem 3rem;
+    background-color: gray;
+    text-align: center;
   }
-
 }

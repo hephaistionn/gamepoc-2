@@ -3,7 +3,7 @@ import * as THREE from 'three';
 export default class Camera {
 
   constructor(config) {
-    const canvas = document.getElementById('D3');
+    const canvas = document.getElementsByTagName('canvas');
     this.element = new THREE.PerspectiveCamera(25, canvas.clientWidth / canvas.clientHeight, 0.1, 4000);
     this.raycaster = new THREE.Raycaster();
     this.centerScreen = new THREE.Vector2(1,0);

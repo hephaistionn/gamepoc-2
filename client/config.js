@@ -18,8 +18,6 @@ categories.forEach(category => {
 
 const worldSize = categories[categories.length-1].factor*2;
 
-console.log(categories)
-
 export default {
   populate,
   categories,

@@ -1,5 +1,5 @@
 import World from './views/world';
-import Home from './ui/menu';
+import Home from './views/home';
 import ee from './core/eventemitter';
 
 window.addEventListener('load', () => {
@@ -18,5 +18,5 @@ window.addEventListener('load', () => {
     }
   });
 
-  ee.emit('changeView', 'world');
+  ee.emit('changeView', 'home');
 });

@@ -1,4 +1,4 @@
-import Scene from '../core/scene'
+import View from '../core/view'
 import config from '../config';
 
 import Effect from '../core/effect';
@@ -10,7 +10,7 @@ import Feed from '../entities/feed';
 import Score from '../ui/score';
 
 
-export default class World extends Scene {
+export default class World extends View {
 
   init() {
     this.camera = new Camera({deltaX: 40, deltaY: 40, deltaZ: 40});
@@ -46,13 +46,12 @@ export default class World extends Scene {
     this.player.setForce(0, 0);
   }
 
-  dismount() {
+  onDismount() {
     this.remove(this.camera);
     this.remove(this.light);
     this.remove(this.ground);
     this.remove(this.player);
     this.remove(this.feeds);
-    this.stop();
   }
 
 }

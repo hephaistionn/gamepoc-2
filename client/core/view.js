@@ -2,11 +2,14 @@ import * as THREE from 'three';
 import nipplejs from 'nipplejs';
 import Stats from 'stats.js';
 
-export default class Scene {
+export default class View {
 
   constructor() {
+    document.body.className = this.constructor.name.split('_')[0];
+    this.canvas = document.createElement('canvas');
+    document.body.appendChild(this.canvas);
     this.requestAnimation = null;
-    this.canvas = document.getElementById('D3');
+    this.canvas = document.getElementsByTagName('canvas')[0];
     this.renderer = new THREE.WebGLRenderer({ canvas: this.canvas, antialias: true, alpha: true });
     this.renderer.setClearColor(0xffffff, 0);
     this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
@@ -15,9 +18,9 @@ export default class Scene {
     this.element.matrixAutoUpdate = false;
     this.events = {};
 
-    this.stats = new Stats();
-    this.stats.showPanel( 0 );
-    document.body.appendChild( this.stats.dom );
+    //this.stats = new Stats();
+    //this.stats.showPanel( 0 );
+    //document.body.appendChild( this.stats.dom );
 
     this.initEvents();
     this.init();
@@ -31,7 +34,7 @@ export default class Scene {
 
   initJoystick() {
     const options = {
-      zone: document.getElementById('zone_joystick'),
+      zone: document.body,
       mode: 'dynamic',
       color: 'blue',
       multitouch: false
@@ -54,22 +57,31 @@ export default class Scene {
     let time;
     const update = () => {
       this.requestAnimation = requestAnimationFrame(update);
-      this.stats.begin();
+      //this.stats.begin();
       const now = new Date().getTime();
       let dt = now - (time || now);
       time = now;
       dt = Math.min(dt, 100);
       this.renderer.render(this.element, this.camera.element);
       this.update(dt);
-      this.stats.end();
+      //this.stats.end();
     };
     update();
+    this.resize();
+  }
+
+  dismount() {
+    while (document.body.firstChild) {
+      document.body.removeChild(document.body.firstChild);
+    }
+    this.onDismount();
+    this.stop();
   }
 
   stop() {
     this.closeEvents();
     this.closeJoystick();
-    cancelAnimationFrame(requestAnimation);
+    cancelAnimationFrame(this.requestAnimation);
   }
 
   resize() {
