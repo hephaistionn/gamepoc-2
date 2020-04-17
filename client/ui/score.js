@@ -1,27 +1,23 @@
-import ee from '../core/eventemitter';
-import config from '../config';
+import Ui from '../core/ui';
+import common from '../common';
+const ee = common.ee;
 
-export default class Score {
+export default class Score extends Ui {
 
-  constructor() {
-    this.domParticles = document.getElementById('particles');
+  init() {
     this.value = 0;
     this.level = 1;
     this.particleCount = 10;
     this.particles = [];
     this.currentParticle = 0;
 
-    const scoreContainer = this.makeDom('div', 'score');
-    const scoreValue = this.makeDom('div', 'score__value');
-    scoreContainer.appendChild(scoreValue);
-    document.body.appendChild(scoreContainer);
-    
-    const particlesContainer = this.makeDom('div', 'paricles');
-    document.body.appendChild(particlesContainer);
+    this.scoreContainer = this.makeDom('div', 'score');
+    this.scoreValue = this.makeDom('div', 'score__value');
+    this.particlesContainer = this.makeDom('div', 'paricles');
 
-    this.particlesContainer = particlesContainer;
-    this.scoreContainer = particlesContainer;
-    this.scoreValue = scoreValue;
+    this.scoreContainer.appendChild(this.scoreValue);
+    document.body.appendChild(this.scoreContainer);
+    document.body.appendChild(this.particlesContainer);
 
     this.prepareParticle();
 
@@ -39,7 +35,7 @@ export default class Score {
   updateScore(sum, value) {
     this.updateParticle(value);
     this.value = sum;
-    this.scoreValue.textContent = 'lvl '+ this.level  + ' score : '+ this.value + '/' +config.categories[this.level].value;
+    this.scoreValue.textContent = 'lvl '+ this.level  + ' score : '+ this.value + '/' +common.categories[this.level].value;
   }
 
   updateParticle(value) {
@@ -62,14 +58,4 @@ export default class Score {
       this.particlesContainer.appendChild(node);
     }
   }
-
-  makeDom(tag, classname, text) {
-    const node = document.createElement(tag);
-    if(classname)
-      node.className = classname;
-    if(text)
-      node.textContent = text;
-    return node;
-  }
-
 }

@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 import nipplejs from 'nipplejs';
+import common from '../common';
+const ee = common.ee;
 import Stats from 'stats.js';
 
 export default class View {
@@ -25,6 +27,14 @@ export default class View {
     this.initEvents();
     this.init();
     this.start();
+
+    ee.on('end', () =>{
+      this.closeJoystick();
+      this.joystick = null;
+      if(this.onEnd) {
+        this.onEnd();
+      }
+    });
   }
 
   initEvents() {
@@ -74,7 +84,9 @@ export default class View {
     while (document.body.firstChild) {
       document.body.removeChild(document.body.firstChild);
     }
-    this.onDismount();
+    if(this.onDismount) {
+      this.onDismount();
+    }
     this.stop();
   }
 

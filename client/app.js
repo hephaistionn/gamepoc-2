@@ -1,6 +1,7 @@
 import World from './views/world';
 import Home from './views/home';
-import ee from './core/eventemitter';
+import common from './common';
+const ee = common.ee;
 
 window.addEventListener('load', () => {
   let view;
@@ -10,13 +11,14 @@ window.addEventListener('load', () => {
 
     switch (viewName) {
       case 'home':
-        view = new Home();
+        view = new Home(ee);
         break;
       case 'world':
-        view = new World();
+        view = new World(ee);
         break;
     }
   });
 
   ee.emit('changeView', 'home');
 });
+

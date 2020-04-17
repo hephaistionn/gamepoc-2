@@ -1,9 +1,9 @@
 import * as THREE from 'three';
 import Entity from '../core/entity';
 import material from '../shaders/materialBlock';
-import ee from '../core/eventemitter';
-import config from '../config';
-const categories = config.categories;
+import common from '../common';
+const ee = common.ee;
+const categories = common.categories;
 
 export default class Player extends Entity {
 

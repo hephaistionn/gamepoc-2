@@ -9,7 +9,6 @@ export default class Ground extends Entity {
     this.y = -0.5;
     this.size = config.size;
     this.scale = 1;
-    this.element = new THREE.Object3D();
     this.makeFloor();
     this.move(this.x, this.y, this.z);
   }
@@ -17,13 +16,13 @@ export default class Ground extends Entity {
   makeFloor() {
     const geometry = new THREE.BoxGeometry(this.size, 50, this.size, 2);
     geometry.computeBoundingBox();
-    const floor = new THREE.Mesh(geometry, material);
-    floor.translateY(-25);
-    floor.updateMatrix();
-    floor.matrixAutoUpdate = false;
-    floor.matrixWorldNeedsUpdate = false;
-    floor.receiveShadow = true;
-    this.element.add(floor);
+    this.element = new THREE.Mesh(geometry, material);
+    this.element.translateY(-25);
+    this.element.updateMatrix();
+    this.element.updateMatrix();
+    this.element.matrixAutoUpdate = false;
+    this.element.matrixWorldNeedsUpdate = true;
+    this.element.receiveShadow = true;
   }
   
 }

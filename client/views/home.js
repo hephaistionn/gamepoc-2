@@ -1,7 +1,6 @@
 import View from '../core/view';
 import Light from '../core/light';
 import Camera from '../core/camera';
-import config from '../config';
 import Menu from '../ui/menu';
 
 
