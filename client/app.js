@@ -6,15 +6,15 @@ const ee = common.ee;
 window.addEventListener('load', () => {
   let view;
 
-  ee.on('changeView', viewName => {
+  ee.on('changeView', (viewName, conf) => {
     if (view) view.dismount();
 
     switch (viewName) {
       case 'home':
-        view = new Home(ee);
+        view = new Home(conf);
         break;
       case 'world':
-        view = new World(ee);
+        view = new World(conf);
         break;
     }
   });

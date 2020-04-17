@@ -13,4 +13,18 @@
     background-color: gray;
     text-align: center;
   }
+
+  &__skin  {
+    position: relative;
+    margin: 0 auto;
+    width: fit-content;
+    &__button  {
+      display: inline-block;
+      width: 15rem;
+      margin: 0rem 2rem;
+      padding: 1rem 3rem;
+      background-color: gray;
+      text-align: center;
+    }
+  }
 }

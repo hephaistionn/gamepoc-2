@@ -14,11 +14,11 @@ import End from '../ui/end';
 
 export default class World extends View {
 
-  init() {
+  init(config) {
     this.camera = new Camera({deltaX: 40, deltaY: 40, deltaZ: 40});
     this.light = new Light({ deltaX: -0.3, deltaY: 1, deltaZ: 0.3 });
     this.ground = new Ground({ x: 0, y: 0, z: 0, size: common.worldSize });
-    this.player = new Player({ x: 0, y: 0, z: 0, areaSize: common.worldSize });
+    this.player = new Player({ x: 0, y: 0, z: 0, areaSize: common.worldSize, skin:config.skin });
     this.score = new Score();
     this.effect = new Effect();
     this.timer =  new Timer(60);

@@ -6,7 +6,7 @@ import Stats from 'stats.js';
 
 export default class View {
 
-  constructor() {
+  constructor(conf) {
     document.body.className = this.constructor.name.split('_')[0];
     this.canvas = document.createElement('canvas');
     document.body.appendChild(this.canvas);
@@ -25,7 +25,7 @@ export default class View {
     //document.body.appendChild( this.stats.dom );
 
     this.initEvents();
-    this.init();
+    this.init(conf);
     this.start();
 
     ee.on('end', () =>{

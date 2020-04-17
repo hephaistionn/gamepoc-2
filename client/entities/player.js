@@ -4,6 +4,7 @@ import material from '../shaders/materialBlock';
 import common from '../common';
 const ee = common.ee;
 const categories = common.categories;
+const colors = [0xff0000,0x0000ff,0x00ff00,0xff00ff];
 
 export default class Player extends Entity {
 
@@ -11,7 +12,8 @@ export default class Player extends Entity {
     super(config);
 
     const geometry = new THREE.BoxGeometry(1, 1, 1);
-    this.element = new THREE.Mesh(geometry, material);
+    this.element = new THREE.Mesh(geometry, material.clone());
+    this.element.material.color.setHex(colors[config.skin]);
     this.element.matrixAutoUpdate = false;
     this.element.receiveShadow = false;
     this.element.castShadow = true;
@@ -24,6 +26,7 @@ export default class Player extends Entity {
 
     this.value = 0;
     this.level = 1;
+    this.skin = config.skin;
     this.addValue(0);
     this.move(config.x, config.y, config.z);
   }
