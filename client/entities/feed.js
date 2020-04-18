@@ -6,7 +6,6 @@ class Feed extends Entity {
 
   constructor(config) {
     super(config);
-    this.scale = config.scale;
     this.value = config.value;
     const geometry = new THREE.BoxGeometry(1, 1, 1);
     this.element = new THREE.Mesh(geometry, material.clone());
@@ -14,7 +13,7 @@ class Feed extends Entity {
     this.element.receiveShadow = false;
     this.element.castShadow = true;
     this.element.material.color.setHex(Math.random() * 0xffffff);
-    this.move(config.x, config.y, config.z);
+    this.initMatrix(config.x, config.y, config.z, config.size); //opti
     this.constructor.elements.push(this.element);
   }
 

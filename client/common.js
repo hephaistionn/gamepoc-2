@@ -38,7 +38,7 @@ function populate(player) {
         z = Math.floor((Math.random() - 0.5) * (worldSize-category.factor));
       }
 
-      const feed = new Feed({ x, y: 0, z, value: category.value, scale:category.factor});
+      const feed = new Feed({ x, y: 0, z, value: category.value, size:category.factor});
       if (feed.freePosition(feeds)) {
         feeds.push(feed);
         count--
@@ -57,7 +57,7 @@ function populate(player) {
   while (player.x === 0 && player.z === 0 && !ready) {
     const x = Math.floor((Math.random() - 0.5) * worldSize*0.95);
     const z = Math.floor((Math.random() - 0.5) * worldSize*0.95);
-    player.move(x, 0, z);
+    player.move(x, z);
     ready = player.freePosition(feeds);
   }
 

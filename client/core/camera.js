@@ -49,7 +49,7 @@ export default class Camera {
   }
 
   update(dt, target) {
-    this.zoomTarget = target.scale/6;
+    this.zoomTarget = target.size/6;
     const delta = this.zoomTarget - this.zoom;
     this.zoom += delta *  dt * 0.001;
     this.move(target.x, target.y, target.z);

@@ -2,15 +2,11 @@ import * as THREE from 'three';
 import Entity from '../core/entity';
 import material from '../shaders/materialGround';
 
-export default class Ground extends Entity {
+export default class Ground {
 
   constructor(config) {
-    super(config);
-    this.y = -0.5;
     this.size = config.size;
-    this.scale = 1;
     this.makeFloor();
-    this.move(this.x, this.y, this.z);
   }
 
   makeFloor() {
@@ -24,6 +20,19 @@ export default class Ground extends Entity {
     this.element.matrixWorldNeedsUpdate = true;
     this.element.receiveShadow = true;
   }
-  
+
+  onMount(parent) {
+    this.parent = parent;
+    this.parent.element.add(this.element);
+  }
+
+  onDismount() {
+    this.element.geometry.dispose();
+    this.element.material.dispose();
+    this.parent.element.remove(this.element);
+    this.parent = null;
+    this.onPostDismount();
+  }
+
 }
 

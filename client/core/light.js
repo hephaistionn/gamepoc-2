@@ -44,7 +44,7 @@ export default class Light {
   }
 
   update(dt, target) {
-    this.scale(target.scale);
+    this.scale(target.size);
     this.move(target.x, target.y, target.z);
   }
 

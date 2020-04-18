@@ -27,14 +27,14 @@ export default class Player extends Entity {
     this.value = 0;
     this.level = 1;
     this.skin = config.skin;
+    this.initMatrix(config.x, config.y, config.z, 1); //opti
     this.addValue(0);
-    this.move(config.x, config.y, config.z);
   }
 
   setForce(force, angle) {
     if (force) {
-      this.forceX = Math.cos(angle) * (force * this.forceFactor + this.scale/1000);
-      this.forceZ = -Math.sin(angle) * (force * this.forceFactor + this.scale/1000); 
+      this.forceX = Math.cos(angle) * (force * this.forceFactor + this.size/1000);
+      this.forceZ = -Math.sin(angle) * (force * this.forceFactor + this.size/1000); 
       //this.a = -angle;
     } else {
       this.forceX = 0;
@@ -46,7 +46,7 @@ export default class Player extends Entity {
     let x = this.x + this.forceX * dt;
     let z = this.z + this.forceZ * dt;
 
-    const marginPlayer = this.scale;
+    const marginPlayer = this.size;
 
     //border limit
     const borderLimit = (this.areaSize - marginPlayer) / 2;
@@ -65,7 +65,7 @@ export default class Player extends Entity {
     let value;
     for (let i in feeds) {
       feed = feeds[i];
-      marginFeed = feed.scale;
+      marginFeed = feed.size;
       margin = (marginFeed + marginPlayer) / 2;
       overlapX = Math.abs(x - feed.x);
       overlapZ = Math.abs(z - feed.z);
@@ -92,12 +92,11 @@ export default class Player extends Entity {
         }
       }
     }
-    this.move(x, 0, z);
+    this.move(x, z);
   }
 
   addValue(value) {
     this.value += value;
-
     for(let i=1; i<categories.length; i++) {
       if(this.value >= categories[i].value&&this.level===i) {
         if(categories[this.level+1]) {
@@ -105,13 +104,20 @@ export default class Player extends Entity {
           this.value = 0;
           ee.emit('leveled', this.level);
         }
-        return;
+        this.updateBlock();
+        break;
       }
     }
 
-    this.scale = categories[this.level].factor;
-
+    const size = categories[this.level].factor;
+    this.scale(size);
     ee.emit('scored', {sum:this.value, value});
+  }
+
+  updateBlock() {
+    this.value;
+    this.level;
+
   }
 }
 
