@@ -11,7 +11,7 @@ module.exports = {
     filename: '[name].js'
   },
   optimization: {
-    minimize: false
+    minimize: process.env.NODE_ENV === 'production'
   },
   module: {
     rules: [

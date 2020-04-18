@@ -33,3 +33,5 @@ export default class Home extends View {
     this.remove(this.light);
   }
 }
+
+Home.prototype.cname = 'home';

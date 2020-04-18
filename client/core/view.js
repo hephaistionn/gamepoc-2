@@ -7,7 +7,7 @@ import Stats from 'stats.js';
 export default class View {
 
   constructor(conf) {
-    document.body.className = this.constructor.name.split('_')[0];
+    document.body.className = this.cname;
     this.canvas = document.createElement('canvas');
     document.body.appendChild(this.canvas);
     this.requestAnimation = null;

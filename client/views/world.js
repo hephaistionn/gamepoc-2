@@ -64,3 +64,5 @@ export default class World extends View {
   }
 
 }
+
+World.prototype.cname = 'world';
