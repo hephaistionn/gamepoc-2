@@ -14,7 +14,6 @@ export default class Player extends Entity {
     const wireframe = new THREE.EdgesGeometry( geometry );
     this.element = new THREE.LineSegments( wireframe );
     this.element.material.color.setHex(colors[config.skin]);
-    //this.element.material.depthTest = false;
 
     this.element.matrixAutoUpdate = false;
     this.element.receiveShadow = false;
@@ -99,7 +98,6 @@ export default class Player extends Entity {
   }
 
   addValue(value) {
-    this.updateBlock(value);
     this.value += value;
     for(let i=1; i<categories.length; i++) {
       if(this.value >= categories[i].value&&this.level===i) {
@@ -114,52 +112,73 @@ export default class Player extends Entity {
 
     const size = categories[this.level].factor;
     this.scale(size);
+    this.updateBlock(value);
     ee.emit('scored', {sum:this.value, value});
   }
 
-  updateBlock(value) {
+  updateBlock() {
     const sum = this.value;
+    let remaining  = sum;
     const size = categories[this.level].factor;
     const nbX = size;
     const nbY = size;
     const nbZ = size;
-    for(let i=0;i<value; i++) {
-      const block = new THREE.Mesh(geometry, material);
-      block.matrixAutoUpdate = false;
-      block.receiveShadow = false;
-      //block.material.color.setHex(this.element.material.color);
-      this.element.add(block);
-    }
-  }
-
-  moveBlocs(tx, tz) {
-    const size = categories[this.level].factor;
-    const nbX = size;
-    const nbY = size;
-    const nbZ = size;
-    const children = this.element.children;
-    const sum = children.length;
-    
 
     const gapX = nbX;
     const gapY = nbY*nbX;
     const gapZ = nbY*nbX*nbZ;
 
-    const offsetX = tx - nbX/2 + 0.5;
-    const offsetY = 0.5;
-    const offsetZ = tz - nbZ/2 + 0.5;
 
-    for(let i=0; i<sum; i++) {
-      const x = i%gapX;
-      const y = Math.floor( (i%gapY)/gapX );
-      const z = Math.floor( (i%gapZ)/gapY );
+    while(this.element.children.length > 0){ 
+      this.element.remove(this.element.children[0]); 
+    }
+ 
 
-      const matrixWorld = children[i].matrixWorld.elements;
-      matrixWorld[12] = x + offsetX;
-      matrixWorld[13] = y + offsetY;
-      matrixWorld[14] = z + offsetZ;
+    const tz = Math.floor(sum/gapY); //combien de tranches completes
+    remaining = sum-tz*gapY; //ce qu'il reste
+
+    const ty = Math.floor(remaining/gapX); //combien de lignes completes
+    remaining = remaining-ty*gapX; //ce qu'il reste
+
+    const tx = remaining //combien de blocks
+
+    if(tz) {
+      const geoMergeArea = new THREE.BoxGeometry(nbX, nbY, tz);
+      geoMergeArea.translate(0, nbY/2, tz/2-nbZ/2);
+      const mergeArea = new THREE.Mesh(geoMergeArea, material);
+      mergeArea.matrixAutoUpdate = false;
+      mergeArea.castShadow = true;
+      this.element.add(mergeArea);
     }
 
+
+    if(ty) {
+      const geoMergeLine = new THREE.BoxGeometry(nbX, ty, 1);
+      geoMergeLine.translate(0, ty/2, 1/2-nbZ/2+tz);
+      const mergeLine = new THREE.Mesh(geoMergeLine, material);
+      mergeLine.matrixAutoUpdate = false;
+      mergeLine.castShadow = true;
+      this.element.add(mergeLine);
+    }
+
+    if(tx) {
+      const geoMergeBlock = new THREE.BoxGeometry(tx, 1, 1);
+      geoMergeBlock.translate(tx/2-nbX/2, 1/2+ty, 1/2-nbZ/2+tz);
+      const mergeBlock = new THREE.Mesh(geoMergeBlock, material);
+      mergeBlock.matrixAutoUpdate = false;
+      mergeBlock.castShadow = true;
+      this.element.add(mergeBlock);
+    }
   }
+
+  moveBlocs(x, z) {
+    const children = this.element.children;
+    for(let i=0; i<children.length; i++) {
+      const matrixWorld = children[i].matrixWorld.elements;
+      matrixWorld[12] = x;
+      matrixWorld[14] = z;
+    }
+  }
+
 }
 
