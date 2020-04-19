@@ -1,13 +1,13 @@
 import * as THREE from 'three';
 import Entity from '../core/entity';
 import material from '../shaders/materialBlock';
+const geometry = new THREE.BoxGeometry(1, 1, 1);
 
 class Feed extends Entity {
 
   constructor(config) {
     super(config);
     this.value = config.value;
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
     this.element = new THREE.Mesh(geometry, material.clone());
     this.element.matrixAutoUpdate = false;
     this.element.receiveShadow = false;

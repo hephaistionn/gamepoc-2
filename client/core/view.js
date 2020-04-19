@@ -2,7 +2,6 @@ import * as THREE from 'three';
 import nipplejs from 'nipplejs';
 import common from '../common';
 const ee = common.ee;
-import Stats from 'stats.js';
 
 export default class View {
 
@@ -19,10 +18,6 @@ export default class View {
     this.element = new THREE.Scene();
     this.element.matrixAutoUpdate = false;
     this.events = {};
-
-    //this.stats = new Stats();
-    //this.stats.showPanel( 0 );
-    //document.body.appendChild( this.stats.dom );
 
     this.initEvents();
     this.init(conf);
@@ -67,14 +62,12 @@ export default class View {
     let time;
     const update = () => {
       this.requestAnimation = requestAnimationFrame(update);
-      //this.stats.begin();
       const now = new Date().getTime();
       let dt = now - (time || now);
       time = now;
       dt = Math.min(dt, 100);
       this.renderer.render(this.element, this.camera.element);
       this.update(dt);
-      //this.stats.end();
     };
     update();
     this.resize();

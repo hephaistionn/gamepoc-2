@@ -5,15 +5,17 @@ import common from '../common';
 const ee = common.ee;
 const categories = common.categories;
 const colors = [0xff0000,0x0000ff,0x00ff00,0xff00ff];
+const geometry = new THREE.BoxGeometry(1, 1, 1);
 
 export default class Player extends Entity {
 
   constructor(config) {
     super(config);
-
-    const geometry = new THREE.BoxGeometry(1, 1, 1);
-    this.element = new THREE.Mesh(geometry, material.clone());
+    const wireframe = new THREE.EdgesGeometry( geometry );
+    this.element = new THREE.LineSegments( wireframe );
     this.element.material.color.setHex(colors[config.skin]);
+    //this.element.material.depthTest = false;
+
     this.element.matrixAutoUpdate = false;
     this.element.receiveShadow = false;
     this.element.castShadow = true;
@@ -93,18 +95,19 @@ export default class Player extends Entity {
       }
     }
     this.move(x, z);
+    this.moveBlocs(x, z);
   }
 
   addValue(value) {
+    this.updateBlock(value);
     this.value += value;
     for(let i=1; i<categories.length; i++) {
       if(this.value >= categories[i].value&&this.level===i) {
         if(categories[this.level+1]) {
           this.level = i+1;
-          this.value = 0;
+          //this.value = 0;
           ee.emit('leveled', this.level);
         }
-        this.updateBlock();
         break;
       }
     }
@@ -114,9 +117,48 @@ export default class Player extends Entity {
     ee.emit('scored', {sum:this.value, value});
   }
 
-  updateBlock() {
-    this.value;
-    this.level;
+  updateBlock(value) {
+    const sum = this.value;
+    const size = categories[this.level].factor;
+    const nbX = size;
+    const nbY = size;
+    const nbZ = size;
+    for(let i=0;i<value; i++) {
+      const block = new THREE.Mesh(geometry, material);
+      block.matrixAutoUpdate = false;
+      block.receiveShadow = false;
+      //block.material.color.setHex(this.element.material.color);
+      this.element.add(block);
+    }
+  }
+
+  moveBlocs(tx, tz) {
+    const size = categories[this.level].factor;
+    const nbX = size;
+    const nbY = size;
+    const nbZ = size;
+    const children = this.element.children;
+    const sum = children.length;
+    
+
+    const gapX = nbX;
+    const gapY = nbY*nbX;
+    const gapZ = nbY*nbX*nbZ;
+
+    const offsetX = tx - nbX/2 + 0.5;
+    const offsetY = 0.5;
+    const offsetZ = tz - nbZ/2 + 0.5;
+
+    for(let i=0; i<sum; i++) {
+      const x = i%gapX;
+      const y = Math.floor( (i%gapY)/gapX );
+      const z = Math.floor( (i%gapZ)/gapY );
+
+      const matrixWorld = children[i].matrixWorld.elements;
+      matrixWorld[12] = x + offsetX;
+      matrixWorld[13] = y + offsetY;
+      matrixWorld[14] = z + offsetZ;
+    }
 
   }
 }

@@ -10,6 +10,8 @@ import Feed from '../entities/feed';
 import Score from '../ui/score';
 import Timer from '../ui/timer';
 import End from '../ui/end';
+import Stats from 'stats.js';
+let stats;
 
 
 export default class World extends View {
@@ -21,7 +23,7 @@ export default class World extends View {
     this.player = new Player({ x: 0, y: 0, z: 0, areaSize: common.worldSize, skin:config.skin });
     this.score = new Score();
     this.effect = new Effect();
-    this.timer =  new Timer(60);
+    this.timer =  new Timer(600);
     this.end = new End(this.player);
     this.feeds = common.populate(this.player);
     this.tempo = 0;
@@ -32,6 +34,10 @@ export default class World extends View {
     this.add(this.player);
     this.add(this.feeds);
     this.initJoystick();
+
+    stats = new Stats();
+    stats.showPanel( 0 );
+    document.body.appendChild( stats.dom );
   }
 
   update(dt) {
@@ -41,6 +47,8 @@ export default class World extends View {
     this.effect.update(dt, this.camera );
     this.timer.update(dt);
     Feed.update(dt);
+    stats.end();
+    stats.begin();
   }
 
   onTouchMouve(force, angle) {
