@@ -3,7 +3,7 @@ import Entity from '../core/entity';
 import material from '../shaders/materialBlock';
 import common from '../common';
 const ee = common.ee;
-const categories = common.categories;
+const groups = common.groups.slice(0).reverse();
 const colors = [0xff0000,0x0000ff,0x00ff00,0xff00ff];
 const geometry = new THREE.BoxGeometry(1, 1, 1);
 
@@ -14,6 +14,7 @@ export default class Player extends Entity {
     const wireframe = new THREE.EdgesGeometry( geometry );
     this.element = new THREE.LineSegments( wireframe );
     this.element.material.color.setHex(colors[config.skin]);
+    material.color.setHex(colors[config.skin]);
 
     this.element.matrixAutoUpdate = false;
     this.element.receiveShadow = false;
@@ -28,6 +29,7 @@ export default class Player extends Entity {
     this.value = 0;
     this.level = 1;
     this.skin = config.skin;
+
     this.initMatrix(config.x, config.y, config.z, 1); //opti
     this.addValue(0);
   }
@@ -99,9 +101,9 @@ export default class Player extends Entity {
 
   addValue(value) {
     this.value += value;
-    for(let i=1; i<categories.length; i++) {
-      if(this.value >= categories[i].value&&this.level===i) {
-        if(categories[this.level+1]) {
+    for(let i=1; i<groups.length; i++) {
+      if(this.value >= groups[i].value&&this.level===i) {
+        if(groups[this.level+1]) {
           this.level = i+1;
           //this.value = 0;
           ee.emit('leveled', this.level);
@@ -110,7 +112,7 @@ export default class Player extends Entity {
       }
     }
 
-    const size = categories[this.level].factor;
+    const size = groups[this.level].size;
     this.scale(size);
     this.updateBlock(value);
     ee.emit('scored', {sum:this.value, value});
@@ -119,7 +121,7 @@ export default class Player extends Entity {
   updateBlock() {
     const sum = this.value;
     let remaining  = sum;
-    const size = categories[this.level].factor;
+    const size = groups[this.level].size;
     const nbX = size;
     const nbY = size;
     const nbZ = size;
@@ -132,7 +134,6 @@ export default class Player extends Entity {
     while(this.element.children.length > 0){ 
       this.element.remove(this.element.children[0]); 
     }
- 
 
     const tz = Math.floor(sum/gapY); //combien de tranches completes
     remaining = sum-tz*gapY; //ce qu'il reste

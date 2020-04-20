@@ -11,7 +11,7 @@ export default class Home extends View {
     this.light = new Light({ deltaX: -0.3, deltaY: 1, deltaZ: 0.3 });
     this.menu = new Menu();
 
-    this.players = [0,1,2,3].map((color, i) => new Player({ x: i*3, y: 0, z: -i*3, skin: i}));
+    this.players = [0,1,2,3].map(i => new Player({ x: i*3, y: 0, z: -i*3, skin: i}));
     
     this.add(this.camera);
     this.add(this.light);

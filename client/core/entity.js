@@ -60,24 +60,6 @@ class Entity {
     }
   }
 
-  checkCollision(block) {
-    const margin1 = this.size;
-    const margin2 = block.size;
-    const margin = (margin1 + margin2) / 2;
-    const overlapX = Math.abs(this.x - block.x);
-    const overlapZ = Math.abs(this.z - block.z);
-    return overlapX < margin && overlapZ < margin
-  }
-
-  freePosition(blocks) {
-    for(let i in blocks) {
-      if(this.checkCollision(blocks[i])) {
-        return false;
-      }
-    }
-    return true;
-  }
-
   onEat() {
     this.dead = true;
     this.constructor.dying.push(this);
