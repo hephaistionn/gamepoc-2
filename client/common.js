@@ -1,4 +1,3 @@
-import Feed from './entities/feed';
 import EventEmitter from 'event-emitter';
 const ee = EventEmitter();
 
@@ -6,10 +5,10 @@ const groups = [
   { count: 0, size: 256, value: 16777216 },
   { count: 1, size: 128, value: 2097152 },
   { count: 4, size: 64, value: 262144 },
-  { count: 22, size: 32, value: 32768 },
-  { count: 70, size: 16, value: 4096 },
-  { count: 256, size: 8 , value: 512 },
-  { count: 512, size: 4, value: 64 },
+  { count: 8, size: 32, value: 32768 },
+  { count: 64, size: 16, value: 4096 },
+  { count: 128, size: 8 , value: 512 },
+  { count: 256, size: 4, value: 64 },
   { count: 512, size: 2, value: 8 },
   { count: 512, size: 1, value: 1},  
 ];
@@ -29,7 +28,7 @@ function validPosition(blocks, x, z, offset) {
 }
 
 
-function populate(player) {
+function populate(player, Feed) {
   const feeds = [];
 
   for(let i=0; i<groups.length; i++) {

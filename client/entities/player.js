@@ -4,7 +4,7 @@ import material from '../shaders/materialBlock';
 import common from '../common';
 const ee = common.ee;
 const groups = common.groups.slice(0).reverse();
-const colors = [0xff0000,0x0000ff,0x00ff00,0xff00ff];
+const colors = [0x009b48,0xffffff,0xb71234,0xffd500, 0x0046ad, 0xff5800 ];
 const geometry = new THREE.BoxGeometry(1, 1, 1);
 
 export default class Player extends Entity {
@@ -144,8 +144,9 @@ export default class Player extends Entity {
     const tx = remaining //combien de blocks
 
     if(tz) {
-      const geoMergeArea = new THREE.BoxGeometry(nbX, nbY, tz);
-      geoMergeArea.translate(0, nbY/2, tz/2-nbZ/2);
+      const geoMergeArea = new THREE.BoxGeometry(nbX, tz, nbY);
+      this.drawUv(geoMergeArea,nbX, tz, nbY)
+      geoMergeArea.translate(0, tz/2, nbY/2-nbY/2);
       const mergeArea = new THREE.Mesh(geoMergeArea, material);
       mergeArea.matrixAutoUpdate = false;
       mergeArea.castShadow = true;
@@ -154,8 +155,9 @@ export default class Player extends Entity {
 
 
     if(ty) {
-      const geoMergeLine = new THREE.BoxGeometry(nbX, ty, 1);
-      geoMergeLine.translate(0, ty/2, 1/2-nbZ/2+tz);
+      const geoMergeLine = new THREE.BoxGeometry(nbX, 1, ty);
+      this.drawUv(geoMergeLine,nbX, 1, ty)
+      geoMergeLine.translate(0, 1/2+tz, ty/2-nbY/2);
       const mergeLine = new THREE.Mesh(geoMergeLine, material);
       mergeLine.matrixAutoUpdate = false;
       mergeLine.castShadow = true;
@@ -164,7 +166,8 @@ export default class Player extends Entity {
 
     if(tx) {
       const geoMergeBlock = new THREE.BoxGeometry(tx, 1, 1);
-      geoMergeBlock.translate(tx/2-nbX/2, 1/2+ty, 1/2-nbZ/2+tz);
+      this.drawUv(geoMergeBlock,tx, 1, 1)
+      geoMergeBlock.translate(tx/2-nbX/2, 1/2+tz, 1/2+ty-nbY/2);
       const mergeBlock = new THREE.Mesh(geoMergeBlock, material);
       mergeBlock.matrixAutoUpdate = false;
       mergeBlock.castShadow = true;
@@ -179,6 +182,42 @@ export default class Player extends Entity {
       matrixWorld[12] = x;
       matrixWorld[14] = z;
     }
+  }
+
+  drawUv(geo, dx, dy, dz) {
+      geo.uvsNeedUpdate = true;
+      const faceVertexUvs = geo.faceVertexUvs[0];
+      let uv;
+
+      uv = faceVertexUvs[0];
+      uv[0].x = 0; uv[0].y = dy;
+      uv[1].x = 0; uv[1].y = 0;
+      uv[2].x = dz; uv[2].y = dy;
+
+      uv = faceVertexUvs[1];
+      uv[0].x = 0; uv[0].y = 0;
+      uv[1].x = dz; uv[1].y = 0;
+      uv[2].x = dz; uv[2].y = dy;
+
+      uv = faceVertexUvs[4];
+      uv[0].x = 0; uv[0].y = dz;
+      uv[1].x = 0; uv[1].y = 0;
+      uv[2].x = dx; uv[2].y = dz;
+
+      uv = faceVertexUvs[5];
+      uv[0].x = 0; uv[0].y = 0;
+      uv[1].x = dx; uv[1].y = 0;
+      uv[2].x = dx; uv[2].y = dz;
+
+      uv = faceVertexUvs[8];
+      uv[0].x = 0; uv[0].y = dy;
+      uv[1].x = 0; uv[1].y = 0;
+      uv[2].x = dx; uv[2].y = dy;
+
+      uv = faceVertexUvs[9];
+      uv[0].x = 0; uv[0].y = 0;
+      uv[1].x = dx; uv[1].y = 0;
+      uv[2].x = dx; uv[2].y = dy;
   }
 
 }

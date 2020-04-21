@@ -1,6 +1,5 @@
-import View from '../core/view'
 import common from '../common';
-
+import View from '../core/view'
 import Effect from '../core/effect';
 import Light from '../core/light';
 import Camera from '../core/camera';
@@ -25,7 +24,7 @@ export default class World extends View {
     this.effect = new Effect();
     this.timer =  new Timer(600);
     this.end = new End(this.player);
-    this.feeds = common.populate(this.player);
+    this.feeds = common.populate(this.player, Feed);
     this.tempo = 0;
 
     this.add(this.camera);
