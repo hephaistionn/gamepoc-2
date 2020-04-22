@@ -22,7 +22,7 @@ export default class World extends View {
     this.player = new Player({ x: 0, y: 0, z: 0, areaSize: common.worldSize, skin:config.skin });
     this.score = new Score();
     this.effect = new Effect();
-    this.timer =  new Timer(600);
+    this.timer =  new Timer(60);
     this.end = new End(this.player);
     this.feeds = common.populate(this.player, Feed);
     this.tempo = 0;

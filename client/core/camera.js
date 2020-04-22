@@ -3,8 +3,9 @@ import * as THREE from 'three';
 export default class Camera {
 
   constructor(config) {
-    const canvas = document.getElementsByTagName('canvas');
+    const canvas = document.getElementsByTagName('canvas')[0];
     this.element = new THREE.PerspectiveCamera(25, canvas.clientWidth / canvas.clientHeight, 0.1, 4000);
+    //this.element = new THREE.OrthographicCamera( canvas.clientWidth / - 80, canvas.clientWidth / 80, canvas.clientHeight / 80, canvas.clientHeight / - 80, 0.1, 4000 );
     this.raycaster = new THREE.Raycaster();
     this.centerScreen = new THREE.Vector2(1,0);
     this.centerScreenOffsetRight = new THREE.Vector2(0.10,-0.14);

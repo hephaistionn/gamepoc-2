@@ -1,11 +1,16 @@
 import * as THREE from 'three';
 import Entity from '../core/entity';
 import material from '../shaders/materialBlock';
+const materialArea = material.clone();
+const materialLine = material.clone();
+const materialblock = material.clone();
+
 import common from '../common';
 const ee = common.ee;
 const groups = common.groups.slice(0).reverse();
 const colors = [0x009b48,0xffffff,0xb71234,0xffd500, 0x0046ad, 0xff5800 ];
-const geometry = new THREE.BoxGeometry(1, 1, 1);
+const geometry = new THREE.BoxGeometry(1, 0.01, 1);
+geometry.translate(0, -0.5, 0);
 
 export default class Player extends Entity {
 
@@ -14,6 +19,11 @@ export default class Player extends Entity {
     const wireframe = new THREE.EdgesGeometry( geometry );
     this.element = new THREE.LineSegments( wireframe );
     this.element.material.color.setHex(colors[config.skin]);
+
+    //materialArea.uniforms.color.value.setHex(colors[config.skin]);
+    //materialLine.uniforms.color.value.setHex(colors[config.skin]);
+    //materialblock.uniforms.color.value.setHex(colors[config.skin]);
+
     material.color.setHex(colors[config.skin]);
 
     this.element.matrixAutoUpdate = false;
@@ -30,7 +40,7 @@ export default class Player extends Entity {
     this.level = 1;
     this.skin = config.skin;
 
-    this.initMatrix(config.x, config.y, config.z, 1); //opti
+    this.initMatrix(config.x, config.y, config.z); //opti
     this.addValue(0);
   }
 
@@ -148,6 +158,7 @@ export default class Player extends Entity {
       this.drawUv(geoMergeArea,nbX, tz, nbY)
       geoMergeArea.translate(0, tz/2, nbY/2-nbY/2);
       const mergeArea = new THREE.Mesh(geoMergeArea, material);
+      //mergeArea.material.uniforms.size.value.set(nbX,tz,nbY);
       mergeArea.matrixAutoUpdate = false;
       mergeArea.castShadow = true;
       this.element.add(mergeArea);
@@ -159,6 +170,7 @@ export default class Player extends Entity {
       this.drawUv(geoMergeLine,nbX, 1, ty)
       geoMergeLine.translate(0, 1/2+tz, ty/2-nbY/2);
       const mergeLine = new THREE.Mesh(geoMergeLine, material);
+      //mergeLine.material.uniforms.size.value.set(nbX,1,ty);
       mergeLine.matrixAutoUpdate = false;
       mergeLine.castShadow = true;
       this.element.add(mergeLine);
@@ -169,6 +181,7 @@ export default class Player extends Entity {
       this.drawUv(geoMergeBlock,tx, 1, 1)
       geoMergeBlock.translate(tx/2-nbX/2, 1/2+tz, 1/2+ty-nbY/2);
       const mergeBlock = new THREE.Mesh(geoMergeBlock, material);
+      //mergeBlock.material.uniforms.size.value.set(tx, 1, 1);
       mergeBlock.matrixAutoUpdate = false;
       mergeBlock.castShadow = true;
       this.element.add(mergeBlock);
