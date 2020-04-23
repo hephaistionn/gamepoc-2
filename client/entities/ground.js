@@ -31,7 +31,6 @@ export default class Ground {
     this.element.material.dispose();
     this.parent.element.remove(this.element);
     this.parent = null;
-    this.onPostDismount();
   }
 
 }

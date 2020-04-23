@@ -8,7 +8,7 @@ const materialblock = material.clone();
 import common from '../common';
 const ee = common.ee;
 const groups = common.groups.slice(0).reverse();
-const colors = [0x009b48,0xffffff,0xb71234,0xffd500, 0x0046ad, 0xff5800 ];
+const colors = [0x009b48,0xb71234,0xffd500, 0x0046ad, 0xff5800 ];
 const geometry = new THREE.BoxGeometry(1, 0.01, 1);
 geometry.translate(0, -0.5, 0);
 
@@ -40,15 +40,19 @@ export default class Player extends Entity {
     this.level = 1;
     this.skin = config.skin;
 
+    this.tempoLevel = 0;
+    this.needUpdateBlocks = true;
+    this.blink = false;
+
     this.initMatrix(config.x, config.y, config.z); //opti
     this.addValue(0);
+    this.updateBlock();
   }
 
   setForce(force, angle) {
     if (force) {
       this.forceX = Math.cos(angle) * (force * this.forceFactor + this.size/1000);
       this.forceZ = -Math.sin(angle) * (force * this.forceFactor + this.size/1000); 
-      //this.a = -angle;
     } else {
       this.forceX = 0;
       this.forceZ = 0;
@@ -59,34 +63,26 @@ export default class Player extends Entity {
     let x = this.x + this.forceX * dt;
     let z = this.z + this.forceZ * dt;
 
-    const marginPlayer = this.size;
-
-    //border limit
-    const borderLimit = (this.areaSize - marginPlayer) / 2;
-
+    const borderLimit = (this.areaSize - this.size) / 2;
     x = Math.min(x, borderLimit);
     x = Math.max(x, -borderLimit);
-
     z = Math.min(z, borderLimit);
     z = Math.max(z, -borderLimit);
 
     let feed;
-    let marginFeed;
     let margin;
     let overlapX;
     let overlapZ;
-    let value;
-    for (let i in feeds) {
+    for (let i = 0; i<feeds.length; i++) {
       feed = feeds[i];
-      marginFeed = feed.size;
-      margin = (marginFeed + marginPlayer) / 2;
+      margin = (feed.size + this.size) / 2;
       overlapX = Math.abs(x - feed.x);
       overlapZ = Math.abs(z - feed.z);
       if (overlapX < margin && overlapZ < margin) {
-        if (marginPlayer > marginFeed) {
-          value = feed.onEat();
-          this.addValue(value);
+        if (this.size > feed.size) {
+          feed.onEat();
           feeds.splice(i, 1);
+          this.addValue(feed.value);
           i--;
         } else {
           if (overlapX > overlapZ) {
@@ -105,31 +101,47 @@ export default class Player extends Entity {
         }
       }
     }
+    this.updateLevel(dt);
+    this.updateBlock();
     this.move(x, z);
     this.moveBlocs(x, z);
   }
 
   addValue(value) {
+    if(this.tempoLevel) return;
     this.value += value;
     for(let i=1; i<groups.length; i++) {
-      if(this.value >= groups[i].value&&this.level===i) {
+      if(this.value >= groups[i].value && this.level===i) {
         if(groups[this.level+1]) {
-          this.level = i+1;
-          //this.value = 0;
-          ee.emit('leveled', this.level);
+          this.tempoLevel = 1000;
         }
         break;
       }
     }
-
-    const size = groups[this.level].size;
-    this.scale(size);
-    this.updateBlock(value);
+    this.needUpdateBlocks = true;
     ee.emit('scored', {sum:this.value, value});
   }
 
+  updateLevel(dt) {
+    if(this.tempoLevel > 0) {
+      this.tempoLevel -= dt;
+      this.tempoLevel = Math.max(this.tempoLevel, 0);
+      this.blink =  Math.floor(this.tempoLevel/100)%3;
+      if(this.blink) {   
+        material.color.setHex(0xffffff);
+      } else {
+        material.color.setHex(colors[this.skin]);
+      }
+      if(this.tempoLevel === 0) {
+        this.level += 1;
+        this.needUpdateBlocks = true;
+      }
+    }
+  }
+
   updateBlock() {
-    const sum = this.value;
+    if(this.needUpdateBlocks === false) return;
+    const sum = Math.min(this.value, groups[this.level].value);
     let remaining  = sum;
     const size = groups[this.level].size;
     const nbX = size;
@@ -186,6 +198,9 @@ export default class Player extends Entity {
       mergeBlock.castShadow = true;
       this.element.add(mergeBlock);
     }
+
+    this.scale(size);
+    this.needUpdateBlocks = false;
   }
 
   moveBlocs(x, z) {

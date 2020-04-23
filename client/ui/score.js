@@ -35,7 +35,7 @@ export default class Score extends Ui {
   updateScore(sum, value) {
     this.updateParticle(value);
     this.value = sum;
-    this.scoreValue.textContent = 'lvl '+ this.level  + ' score : '+ this.value + '/' +common.groups[this.level].value;
+    this.scoreValue.textContent = this.value;
   }
 
   updateParticle(value) {

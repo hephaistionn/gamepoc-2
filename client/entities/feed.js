@@ -47,6 +47,11 @@ class Feed extends Entity {
     this.constructor.elements.splice(i, 1);
   }
 
+  onEat() {
+    this.dead = true;
+    this.constructor.dying.push(this);
+  }
+
   update(dt) { //only called for dying entity
     if (this.temooSize > 0.2) { 
       this.temooSize -= dt * 0.006 * this.temooSize;

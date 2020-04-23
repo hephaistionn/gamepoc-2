@@ -45,12 +45,6 @@ class Entity {
     matrixWorld[10] = this.size;
   }
 
-  onEat() {
-    this.dead = true;
-    this.constructor.dying.push(this);
-    return this.value;
-  }
-
   onMount(parent) {
     this.parent = parent;
     this.parent.element.add(this.element);
