@@ -4,7 +4,7 @@ export default class Camera {
 
   constructor(config) {
     const canvas = document.getElementsByTagName('canvas')[0];
-    this.element = new THREE.PerspectiveCamera(25, canvas.clientWidth / canvas.clientHeight, 0.1, 4000);
+    this.element = new THREE.PerspectiveCamera(25, canvas.clientWidth / canvas.clientHeight, 0.1, 8000);
     //this.element = new THREE.OrthographicCamera( canvas.clientWidth / - 80, canvas.clientWidth / 80, canvas.clientHeight / 80, canvas.clientHeight / - 80, 0.1, 4000 );
     this.raycaster = new THREE.Raycaster();
     this.centerScreen = new THREE.Vector2(1,0);
@@ -51,6 +51,7 @@ export default class Camera {
 
   update(dt, target) {
     this.zoomTarget = target.size/6;
+    //this.zoomTarget = target.size;
     const delta = this.zoomTarget - this.zoom;
     this.zoom += delta *  dt * 0.001;
     this.move(target.x, target.y, target.z);

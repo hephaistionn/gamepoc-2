@@ -44,7 +44,7 @@ export default class Player extends Entity {
     this.needUpdateBlocks = true;
     this.blink = false;
 
-    this.initMatrix(config.x, config.y, config.z); //opti
+    this.initMatrix(config.x, config.y+0.1, config.z); //opti
     this.addValue(0);
     this.updateBlock();
   }

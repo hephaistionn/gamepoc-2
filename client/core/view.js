@@ -5,7 +5,7 @@ const ee = common.ee;
 
 export default class View {
 
-  constructor(conf) {
+  constructor() {
     document.body.className = this.cname;
     this.canvas = document.createElement('canvas');
     document.body.appendChild(this.canvas);
@@ -20,8 +20,6 @@ export default class View {
     this.events = {};
 
     this.initEvents();
-    this.init(conf);
-    this.start();
 
     ee.on('end', () =>{
       this.closeJoystick();

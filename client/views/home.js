@@ -6,7 +6,7 @@ import Player from '../entities/player';
 
 export default class Home extends View {
 
-  init() {
+  async init() {
     this.camera = new Camera({deltaX: 10, deltaY: 10, deltaZ: 10});
     this.light = new Light({ deltaX: -0.3, deltaY: 1, deltaZ: 0.3 });
     this.menu = new Menu();

@@ -6,17 +6,20 @@ const ee = common.ee;
 window.addEventListener('load', () => {
   let view;
 
-  ee.on('changeView', (viewName, conf) => {
+  ee.on('changeView', async (viewName, conf) => {
     if (view) view.dismount();
 
     switch (viewName) {
       case 'home':
-        view = new Home(conf);
+        view = new Home();
         break;
       case 'world':
-        view = new World(conf);
+        view = new World();
         break;
     }
+    await view.init(conf);
+    view.start();
+
   });
 
   ee.emit('changeView', 'home');

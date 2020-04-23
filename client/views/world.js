@@ -10,22 +10,25 @@ import Score from '../ui/score';
 import Timer from '../ui/timer';
 import End from '../ui/end';
 import Stats from 'stats.js';
+import pixelMap from '../core/pixelmap';
 let stats;
 
 
 export default class World extends View {
 
-  init(config) {
+  async init(config) {
+
+    const map = 0;//await pixelMap.compute('/assets/map2.png');
+
     this.camera = new Camera({deltaX: 40, deltaY: 40, deltaZ: 40});
     this.light = new Light({ deltaX: -0.3, deltaY: 1, deltaZ: 0.3 });
-    this.ground = new Ground({ x: 0, y: 0, z: 0, size: common.worldSize });
-    this.player = new Player({ x: 0, y: 0, z: 0, areaSize: common.worldSize, skin:config.skin });
+    this.ground = new Ground({ x: 0, y: 0, z: 0, size: map?map.nbX:3500 });
+    this.feeds = common.populateRadius(Feed, map);
+    this.player = common.populatePlayer(Player, this.ground.size);
     this.score = new Score();
     this.effect = new Effect();
-    this.timer =  new Timer(90);
+    this.timer =  new Timer(1200);
     this.end = new End(this.player);
-    this.feeds = common.populate(this.player, Feed);
-    this.tempo = 0;
 
     this.add(this.camera);
     this.add(this.light);
