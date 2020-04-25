@@ -1,7 +1,8 @@
 import common from '../common';
 import * as THREE from 'three';
 import Entity from '../core/entity';
-import material from '../shaders/materialBlock';
+import material from '../shaders/materialBlock4';
+import textures from '../shaders/textures';
 const colors = [0x009b48,0xffffff,0xb71234,0xffd500, 0x0046ad, 0xff5800 ];
 
 
@@ -32,11 +33,10 @@ class Feed extends Entity {
     this.temooSize  = 1;
     this.element = new THREE.Mesh(geometries[config.size], material.clone());
     this.element.matrixAutoUpdate = false;
-    this.element.receiveShadow = false;
     this.element.castShadow = true;
-    //this.element.material.uniforms.color.value.setHex(colors[Math.floor(Math.random()*5.999)]);
-    //this.element.material.uniforms.size.value.set(config.size,config.size,config.size);
-    this.element.material.color.setHex(colors[Math.floor(Math.random()*5.999)]);
+    this.element.material.uniforms.color.value.setHex(colors[Math.floor(Math.random()*5.999)]);
+    this.element.material.uniforms.size.value.set(config.size,config.size,config.size);
+    this.element.material.uniforms.map.value =  textures.list.mapCube;
 
     this.initMatrix(config.x, config.y, config.z); //opti
     this.constructor.elements.push(this.element);

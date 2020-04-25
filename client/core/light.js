@@ -4,7 +4,7 @@ export default class Light {
 
   constructor(config) {
     this.element = new THREE.Object3D();
-    this.ambient = new THREE.AmbientLight(0x999999);
+    this.ambient = new THREE.AmbientLight(0xeeeeee);
     this.directionalLight = new THREE.DirectionalLight(0x888888);
     this.directionalLight.matrixAutoUpdate = false;
     this.directionalLight.castShadow = true;

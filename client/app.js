@@ -1,10 +1,13 @@
 import World from './views/world';
 import Home from './views/home';
 import common from './common';
+import textures from './shaders/textures';
 const ee = common.ee;
 
-window.addEventListener('load', () => {
+window.addEventListener('load', async () => {
   let view;
+
+  await textures.initTextures();
 
   ee.on('changeView', async (viewName, conf) => {
     if (view) view.dismount();

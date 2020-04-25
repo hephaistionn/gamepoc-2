@@ -1,11 +1,10 @@
 import * as THREE from 'three';
 import Entity from '../core/entity';
-import material from '../shaders/materialBlock';
-const materialArea = material.clone();
-const materialLine = material.clone();
-const materialblock = material.clone();
-
 import common from '../common';
+import textures from '../shaders/textures';
+import material from '../shaders/materialPlayer';
+
+
 const ee = common.ee;
 const groups = common.groups.slice(0).reverse();
 const colors = [0x009b48,0xb71234,0xffd500, 0x0046ad, 0xff5800 ];
@@ -20,11 +19,9 @@ export default class Player extends Entity {
     this.element = new THREE.LineSegments( wireframe );
     this.element.material.color.setHex(colors[config.skin]);
 
-    //materialArea.uniforms.color.value.setHex(colors[config.skin]);
-    //materialLine.uniforms.color.value.setHex(colors[config.skin]);
-    //materialblock.uniforms.color.value.setHex(colors[config.skin]);
-
-    material.color.setHex(colors[config.skin]);
+    this.material = material.clone();
+    this.material.uniforms.color.value.setHex(colors[config.skin]);
+    this.material.uniforms.map.value = textures.list.mapCube;
 
     this.element.matrixAutoUpdate = false;
     this.element.receiveShadow = false;
@@ -128,9 +125,9 @@ export default class Player extends Entity {
       this.tempoLevel = Math.max(this.tempoLevel, 0);
       this.blink =  Math.floor(this.tempoLevel/100)%3;
       if(this.blink) {   
-        material.color.setHex(0xffffff);
+        this.material.uniforms.blink.value = 1;
       } else {
-        material.color.setHex(colors[this.skin]);
+        this.material.uniforms.blink.value = 0;
       }
       if(this.tempoLevel === 0) {
         this.level += 1;
@@ -169,20 +166,17 @@ export default class Player extends Entity {
       const geoMergeArea = new THREE.BoxGeometry(nbX, tz, nbY);
       this.drawUv(geoMergeArea,nbX, tz, nbY)
       geoMergeArea.translate(0, tz/2, nbY/2-nbY/2);
-      const mergeArea = new THREE.Mesh(geoMergeArea, material);
-      //mergeArea.material.uniforms.size.value.set(nbX,tz,nbY);
+      const mergeArea = new THREE.Mesh(geoMergeArea, this.material);
       mergeArea.matrixAutoUpdate = false;
       mergeArea.castShadow = true;
       this.element.add(mergeArea);
     }
 
-
     if(ty) {
       const geoMergeLine = new THREE.BoxGeometry(nbX, 1, ty);
       this.drawUv(geoMergeLine,nbX, 1, ty)
       geoMergeLine.translate(0, 1/2+tz, ty/2-nbY/2);
-      const mergeLine = new THREE.Mesh(geoMergeLine, material);
-      //mergeLine.material.uniforms.size.value.set(nbX,1,ty);
+      const mergeLine = new THREE.Mesh(geoMergeLine, this.material);
       mergeLine.matrixAutoUpdate = false;
       mergeLine.castShadow = true;
       this.element.add(mergeLine);
@@ -192,8 +186,7 @@ export default class Player extends Entity {
       const geoMergeBlock = new THREE.BoxGeometry(tx, 1, 1);
       this.drawUv(geoMergeBlock,tx, 1, 1)
       geoMergeBlock.translate(tx/2-nbX/2, 1/2+tz, 1/2+ty-nbY/2);
-      const mergeBlock = new THREE.Mesh(geoMergeBlock, material);
-      //mergeBlock.material.uniforms.size.value.set(tx, 1, 1);
+      const mergeBlock = new THREE.Mesh(geoMergeBlock, this.material);
       mergeBlock.matrixAutoUpdate = false;
       mergeBlock.castShadow = true;
       this.element.add(mergeBlock);
