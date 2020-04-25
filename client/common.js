@@ -83,16 +83,11 @@ function populateRadius(Feed) {
 
 
 function populateWithMap(Feed, map) {
-  const mapGroups = groups.reduce(function(map, obj) {
-    map[obj.size] = obj;
-    return map;
-  }, {});
-
   const feeds = [];
   const blocks = map.blocks;
   for (let i = 0; i < blocks.length; i++) {
     if(blocks[i]) {
-      const group = mapGroups[blocks[i]];
+      const group = groups[groups.length - blocks[i]];
       const x = i % map.nbX + group.size/2 - map.nbX/2;
       const z = Math.floor(i / map.nbX) + group.size/2 - map.nbZ/2;
       const feed = new Feed({ x, y: 0, z, value: group.value, size:group.size});
