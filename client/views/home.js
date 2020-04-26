@@ -2,7 +2,7 @@ import View from '../core/view';
 import Light from '../core/light';
 import Camera from '../core/camera';
 import Menu from '../ui/menu';
-import Player from '../entities/player';
+import Color from '../entities/color';
 
 export default class Home extends View {
 
@@ -11,11 +11,11 @@ export default class Home extends View {
     this.light = new Light({ deltaX: -0.3, deltaY: 1, deltaZ: 0.3 });
     this.menu = new Menu();
 
-    this.players = [0,1,2,3].map(i => new Player({ x: i*3, y: 0, z: -i*3, skin: i}));
+    this.colors = [0,1,2,3].map(i => new Color({ x: i*3, y: 0, z: -i*3, skin: i}));
     
     this.add(this.camera);
     this.add(this.light);
-    this.add(this.players);
+    this.add(this.colors);
   }
 
   update(dt) {

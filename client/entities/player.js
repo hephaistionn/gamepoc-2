@@ -8,8 +8,9 @@ import material from '../shaders/materialPlayer';
 const ee = common.ee;
 const groups = common.groups.slice(0).reverse();
 const colors = [0x009b48,0xb71234,0xffd500, 0x0046ad, 0xff5800 ];
-const geometry = new THREE.BoxGeometry(1.0, 0.01, 1.0);
-geometry.translate(0, -0.05, 0);
+const geometry = new THREE.PlaneGeometry(1.0, 1.0, 1.0);
+geometry.rotateX(Math.PI/2);
+geometry.translate(0, 0, 0);
 
 export default class Player extends Entity {
 
@@ -17,17 +18,14 @@ export default class Player extends Entity {
     super(config);
     const wireframe = new THREE.EdgesGeometry( geometry );
     this.element = new THREE.LineSegments( wireframe );
-    //this.element = new THREE.Mesh(geometry);
-    //this.element.material.color.setHex(colors[config.skin]);
-    //this.element.frustumCulled = false;
+    this.element.material.color.setHex(colors[config.skin]);
+    this.element.material.linewidth = 2;
+    this.element.matrixAutoUpdate = false;
+    this.element.name = 'player';
 
     this.material = material.clone();
     this.material.uniforms.color.value.setHex(colors[config.skin]);
     this.material.uniforms.map.value = textures.list.mapCube;
-
-    this.element.matrixAutoUpdate = false;
-   // this.element.castShadow = true;
-    this.element.name = 'player';
 
     this.areaSize = config.areaSize;
     this.forceX = 0;
@@ -42,7 +40,7 @@ export default class Player extends Entity {
     this.needUpdateBlocks = true;
     this.blink = false;
 
-    this.initMatrix(config.x, config.y+0.1, config.z); //opti
+    this.initMatrix(config.x, config.y, config.z); //opti
     this.addValue(0);
     this.updateBlock();
   }

@@ -94,9 +94,9 @@ function populateWithMap(Feed, map) {
   return feeds;
 }
 
-function populatePlayer(Player, areaSize, map) {
+function populatePlayer(Player, areaSize, map, config) {
   const playerSpawn = map.playerSpawn[Math.floor(Math.random()*map.playerSpawn.length-0.001)];
-  return new Player({ x: playerSpawn.x, y: 0, z: playerSpawn.z, areaSize, skin:0 });
+  return new Player({ x: playerSpawn.x, y: 0, z: playerSpawn.z, areaSize, skin:config.skin });
 }
 
 export default {

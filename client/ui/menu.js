@@ -26,7 +26,7 @@ export default class Home extends Ui {
 
     buttonNext.onclick = ()=>{
       this.skin += 1
-      this.skin = Math.min(2, this.skin);
+      this.skin = Math.min(3, this.skin);
     };
 
     buttonPrevious.onclick = ()=>{
