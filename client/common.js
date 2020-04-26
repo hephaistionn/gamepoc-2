@@ -27,13 +27,10 @@ function validPosition(blocks, x, z, offset) {
 }
 
 function populateRadius(Feed) {
-
   groups.forEach(group => {group.area = Math.floor(200 * (1+2*group.size/256))});
   groups.forEach((group, i) => {group.count = Math.pow(i,2)*12});
   groups.reverse().reduce( (sum, group) => { group.initArea =  sum;  return  sum + group.area;}, 0);
   groups.reverse();
-
-  console.log(groups)
 
   function randomPositonInArea(group, i) {
     const blockSize = group.size;
@@ -97,8 +94,9 @@ function populateWithMap(Feed, map) {
   return feeds;
 }
 
-function populatePlayer(Player, areaSize) {
-  return new Player({ x: 1, y: 0, z: 1, areaSize, skin:0 });
+function populatePlayer(Player, areaSize, map) {
+  const playerSpawn = map.playerSpawn[Math.floor(Math.random()*map.playerSpawn.length-0.001)];
+  return new Player({ x: playerSpawn.x, y: 0, z: playerSpawn.z, areaSize, skin:0 });
 }
 
 export default {

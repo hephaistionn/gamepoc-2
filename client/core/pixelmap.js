@@ -41,6 +41,17 @@ class PixelMap {
       blocks[i] = imageData[index + 0]
     }
     data.blocks = blocks;
+
+    const playerSpawn = [];
+    for (let i = 0; i < size; i++) {
+      index = i * 4;
+      if(imageData[index + 1]===100){
+        const x = i % data.nbX + 1 - data.nbX/2;
+        const z = Math.floor(i / data.nbX) + 1 - data.nbZ/2;
+        playerSpawn.push({x,z});
+      }
+    }
+    data.playerSpawn = playerSpawn;
     return data;
   }
 };

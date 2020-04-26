@@ -15,11 +15,11 @@ const vertShader = "" +
     "varying vec2 vPosition; \n" +
     "void main() {" +
     "   vec4 worldPosition = modelMatrix * vec4(position, 1.0 ); \n" +
-    "   if(cut != 0.0) {\n"+
-    "      worldPosition = min(worldPosition, vec4(512.0, 2.0, 512.0, 1.0));\n"+
-    "   } \n"+
     "   vNormal = (modelMatrix * vec4(normal, 0.0)).xyz; \n" +
-    "   if (normal.x > 0.0) {"+
+    "   if (cut > 0.0) {"+
+    "     worldPosition = min(worldPosition,  vec4(256.0, cut, 256.0,1.0 ));\n"+
+    "   }  \n"+
+    "   if (normal.x > 0.0) { \n"+
     "     vPosition = worldPosition.zy;  \n" +
     "   } else if (normal.y > 0.0) {"+
     "     vPosition = worldPosition.xz;  \n" +
@@ -35,7 +35,7 @@ const fragShader = "" +
     "precision highp int; \n" +
     "uniform float cut; \n" +
     "uniform vec3 color; \n" +
-    "uniform vec3 size; \n" +
+    "uniform float opacity; \n" +
     "uniform sampler2D map; \n"+
     "varying vec3 vNormal; \n" +
     "varying vec2 vPosition; \n" +
@@ -51,12 +51,12 @@ const fragShader = "" +
     "   }  \n"+
     "   vec3 texture =  texture2D( map, vPosition ).xyz * color;\n"+
     "   vec3 rgb  = texture.xyz * light; \n" +
-    "   gl_FragColor = vec4(rgb , 1.0); \n" +
+    "   gl_FragColor = vec4(rgb , opacity); \n" +
     "}";
 
 const uniforms = {
   cut: {type: 'f', value: 0.0},
-  size: {type: 'vec3', value: new THREE.Vector3(1.0,1.0,1.0)},
+  opacity: {type: 'f', value: 1.0},
   color:  {type: 'vec3', value: new THREE.Color(0xff00ee)},
   map: {type: 't'}
 }

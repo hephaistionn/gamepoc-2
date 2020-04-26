@@ -10,9 +10,9 @@ export default class Light {
     this.directionalLight.castShadow = true;
     this.directionalLight.shadow = new THREE.LightShadow(new THREE.OrthographicCamera(-1, 1, 1, -1, 1, 4000));
     this.directionalLight.shadow.bias = 0.001;
-    this.directionalLight.shadow.radius = 1.3; //blur 
-    this.directionalLight.shadow.mapSize.width = 2048*2;
-    this.directionalLight.shadow.mapSize.height = 2048*2;
+    this.directionalLight.shadow.radius = 1.2; //blur 
+    this.directionalLight.shadow.mapSize.width = 1024*2;
+    this.directionalLight.shadow.mapSize.height = 1024*2;
     new THREE.Matrix4().makeRotationZ( Math.PI/4).multiplyVector3( this.directionalLight.shadow.camera.up );//axe up
     this.element.add(this.ambient);
     this.element.add(this.directionalLight);

@@ -3,7 +3,14 @@ import * as THREE from 'three';
 import Entity from '../core/entity';
 import material from '../shaders/materialBlock4';
 import textures from '../shaders/textures';
-const colors = [0x009b48,0xffffff,0xb71234,0xffd500, 0x0046ad, 0xff5800 ];
+const colors = [0x009b48,0xb71234,0xffd500, 0x0046ad, 0xff5800 ];
+let colorIndex = 0;
+function getColor() {
+  const color = colors[colorIndex];
+  colorIndex++;
+  if(colorIndex >= colors.length) colorIndex = 0;
+  return color;
+}
 
 
 const geometries = {};
@@ -11,6 +18,7 @@ const groups = common.groups;
 for(let v=0; v<groups.length; v++) {
   const size = groups[v].size;
   const geo = new THREE.BoxGeometry(size, size, size);
+  geo.translate(0, size/2, 0);
   geo.uvsNeedUpdate = true;
   const faceVertexUvs = geo.faceVertexUvs[0];
   for(let i=0;i<faceVertexUvs.length; i++) {
@@ -34,8 +42,8 @@ class Feed extends Entity {
     this.element = new THREE.Mesh(geometries[config.size], material.clone());
     this.element.matrixAutoUpdate = false;
     this.element.castShadow = true;
-    this.element.material.uniforms.color.value.setHex(colors[Math.floor(Math.random()*5.999)]);
-    this.element.material.uniforms.size.value.set(config.size,config.size,config.size);
+    this.element.userData.size = config.size;
+    this.element.material.uniforms.color.value.setHex(getColor());
     this.element.material.uniforms.map.value =  textures.list.mapCube;
 
     this.initMatrix(config.x, config.y, config.z); //opti

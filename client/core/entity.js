@@ -13,13 +13,12 @@ class Entity {
   }
 
   initMatrix(x,y,z) {
-    //opti to avoid calling every move; 
     this.x = x;
     this.y = y;
     this.z = z;
     const matrixWorld = this.element.matrixWorld.elements;
     matrixWorld[12] = this.x
-    matrixWorld[13] = this.y + this.size / 2
+    matrixWorld[13] = this.y
     matrixWorld[14] = this.z
     matrixWorld[0] = Math.cos(this.a);
     matrixWorld[2] = Math.sin(this.a);
@@ -39,7 +38,6 @@ class Entity {
   scale(value)  {
     this.size = value;
     const matrixWorld = this.element.matrixWorld.elements;
-    matrixWorld[13] = this.y + this.size / 2;
     matrixWorld[0] = this.size;
     matrixWorld[5] = this.size;
     matrixWorld[10] = this.size;

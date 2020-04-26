@@ -21,10 +21,10 @@ export default class World extends View {
     const map = await pixelMap.compute('/assets/map3.png');
 
     this.camera = new Camera({deltaX: 40, deltaY: 40, deltaZ: 40});
-    this.light = new Light({ deltaX: -0.1, deltaY: 1, deltaZ: 0.1 });
+    this.light = new Light({ deltaX: -0.2, deltaY: 1, deltaZ: 0 });
     this.ground = new Ground({ x: 0, y: 0, z: 0, size: map?map.nbX:3500 });
     this.feeds = common.populateWithMap(Feed, map);
-    this.player = common.populatePlayer(Player, this.ground.size);
+    this.player = common.populatePlayer(Player, this.ground.size, map );
     this.score = new Score();
     this.effect = new Effect();
     this.timer =  new Timer(80);

@@ -4,12 +4,10 @@ export default class Camera {
 
   constructor(config) {
     const canvas = document.getElementsByTagName('canvas')[0];
-    this.element = new THREE.PerspectiveCamera(25, canvas.clientWidth / canvas.clientHeight, 0.1, 8000);
-    //this.element = new THREE.OrthographicCamera( canvas.clientWidth / - 80, canvas.clientWidth / 80, canvas.clientHeight / 80, canvas.clientHeight / - 80, 0.1, 4000 );
+    this.element = new THREE.PerspectiveCamera(25, canvas.clientWidth / canvas.clientHeight, 1, 4000);
     this.raycaster = new THREE.Raycaster();
     this.centerScreen = new THREE.Vector2(1,0);
-    this.centerScreenOffsetRight = new THREE.Vector2(0.10,-0.14);
-    this.centerScreenOffsetLeft = new THREE.Vector2(-0.10,-0.14);
+    this.centerScreenCenter = new THREE.Vector2(0,0);
 
     this.offsetX = config.deltaX;
     this.offsetY = config.deltaY;
@@ -42,16 +40,12 @@ export default class Camera {
   }
 
   checkIntersection(list) {
-    this.raycaster.setFromCamera(this.centerScreenOffsetRight, this.element);
-    const list1 = this.raycaster.intersectObjects(list);
-    this.raycaster.setFromCamera(this.centerScreenOffsetLeft, this.element);
-    const list2 = this.raycaster.intersectObjects(list);
-    return list1.concat(list2);
+    this.raycaster.setFromCamera(this.centerScreenCenter, this.element);
+    return this.raycaster.intersectObjects(list);
   }
 
   update(dt, target) {
     this.zoomTarget = target.size/6;
-    //this.zoomTarget = target.size;
     const delta = this.zoomTarget - this.zoom;
     this.zoom += delta *  dt * 0.001;
     this.move(target.x, target.y, target.z);
