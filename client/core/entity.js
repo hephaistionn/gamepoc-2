@@ -39,7 +39,7 @@ class Entity {
     this.size = value;
     const matrixWorld = this.element.matrixWorld.elements;
     matrixWorld[0] = this.size;
-    //matrixWorld[5] = this.size;
+    matrixWorld[5] = this.size;
     matrixWorld[10] = this.size;
   }
 

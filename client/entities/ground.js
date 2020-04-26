@@ -1,7 +1,6 @@
 import * as THREE from 'three';
 import Entity from '../core/entity';
 import material from '../shaders/materialGround';
-//import material from '../shaders/materialBlock2';
 
 export default class Ground {
 

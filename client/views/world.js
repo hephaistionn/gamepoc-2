@@ -27,7 +27,7 @@ export default class World extends View {
     this.player = common.populatePlayer(Player, this.ground.size, map, config );
     this.score = new Score();
     this.effect = new Effect();
-    this.timer =  new Timer(80);
+    this.timer =  new Timer(75);
     this.end = new End(this.player);
 
     this.add(this.camera);

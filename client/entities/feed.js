@@ -1,7 +1,7 @@
 import common from '../common';
 import * as THREE from 'three';
 import Entity from '../core/entity';
-import material from '../shaders/materialBlock4';
+import material from '../shaders/materialBlock';
 import textures from '../shaders/textures';
 const colors = [0x009b48,0xb71234,0xffd500, 0x0046ad, 0xff5800 ];
 let colorIndex = 0;
@@ -42,7 +42,6 @@ class Feed extends Entity {
     this.element = new THREE.Mesh(geometries[config.size], material.clone());
     this.element.matrixAutoUpdate = false;
     this.element.castShadow = true;
-    this.element.userData.size = config.size;
     this.element.material.uniforms.color.value.setHex(getColor());
     this.element.material.uniforms.map.value =  textures.list.mapCube;
 

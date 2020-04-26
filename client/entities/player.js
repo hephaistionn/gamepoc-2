@@ -12,6 +12,9 @@ const geometry = new THREE.PlaneGeometry(1.0, 1.0, 1.0);
 geometry.rotateX(Math.PI/2);
 geometry.translate(0, 0, 0);
 
+const geometryTransition =  new THREE.BoxGeometry(1, 1, 1);
+geometryTransition.translate(0, 1/2, 0);
+
 export default class Player extends Entity {
 
   constructor(config) {
@@ -27,6 +30,19 @@ export default class Player extends Entity {
     this.material.uniforms.color.value.setHex(colors[config.skin]);
     this.material.uniforms.map.value = textures.list.mapCube;
 
+    this.meshTransition = new THREE.Mesh(geometryTransition, material.clone());
+    this.meshTransition.matrixAutoUpdate = false;
+    this.meshTransition.material.uniforms.color.value.setHex(colors[config.skin]);
+    this.meshTransition.material.uniforms.map.value =  textures.list.mapCube;
+    this.meshTransition.material.uniforms.blink.value = 0.5;
+    this.meshTransition.visible = false;
+
+    this.containerBlocks = new THREE.Object3D();
+    this.containerBlocks.matrixAutoUpdate = false;
+
+    this.element.add(this.containerBlocks);
+    this.element.add(this.meshTransition);
+
     this.areaSize = config.areaSize;
     this.forceX = 0;
     this.forceZ = 0;
@@ -39,6 +55,8 @@ export default class Player extends Entity {
     this.tempoLevel = 0;
     this.needUpdateBlocks = true;
     this.blink = false;
+    this.transitionAnimationX = 0;
+    this.transitionAnimationZ = 0
 
     this.initMatrix(config.x, config.y, config.z); //opti
     this.addValue(0);
@@ -105,10 +123,11 @@ export default class Player extends Entity {
         }
       }
     }
-    this.updateLevel(dt);
+    this.transitionLevel(dt);
     this.updateBlock();
     this.move(x, z);
     this.moveBlocs(x, z);
+    this.moveTransition(x, z);
   }
 
   addValue(value) {
@@ -117,7 +136,7 @@ export default class Player extends Entity {
     for(let i=1; i<groups.length; i++) {
       if(this.value >= groups[i].value && this.level===i) {
         if(groups[this.level+1]) {
-          this.tempoLevel = 1000;
+          this.tempoLevel = 1200;
         }
         break;
       }
@@ -126,21 +145,75 @@ export default class Player extends Entity {
     ee.emit('scored', {sum:this.value, value});
   }
 
-  updateLevel(dt) {
+  transitionLevel(dt) {
     if(this.tempoLevel > 0) {
+      const matrixTransition = this.meshTransition.matrixWorld.elements;
+
+      if(this.tempoLevel === 1200) {
+        this.meshTransition.visible = true;
+        this.containerBlocks.visible = false;
+        matrixTransition[0] = this.size;
+        matrixTransition[5] = this.size;
+        matrixTransition[10] = this.size;
+        this.transitionAnimationX = 0;
+        this.transitionAnimationZ = 0
+      }
+
       this.tempoLevel -= dt;
       this.tempoLevel = Math.max(this.tempoLevel, 0);
-      this.blink =  Math.floor(this.tempoLevel/100)%3;
-      if(this.blink) {   
-        this.material.uniforms.blink.value = 1;
-      } else {
-        this.material.uniforms.blink.value = 0;
+
+      if(this.tempoLevel>950) {
+        this.meshTransition.material.uniforms.blink.value += dt/250;
+        this.meshTransition.material.uniforms.blink.value = Math.min(this.meshTransition.material.uniforms.blink.value, 1);
+      } else if (this.tempoLevel>=200) {
+        const delta = dt/750;
+        const nextSize = this.getNextSizeblock();
+        matrixTransition[0] += (nextSize.dx-this.size)*delta;
+        matrixTransition[5] += (nextSize.dy-this.size)*delta;
+        matrixTransition[10] += (nextSize.dz-this.size)*delta;
+        this.transitionAnimationZ -= ((nextSize.dx-nextSize.dz)/2)*delta;
+
+        const matrixWorld = this.element.matrixWorld.elements;
+        matrixWorld[0] += (nextSize.dx-this.size)*delta;
+        matrixWorld[5] += (nextSize.dx-this.size)*delta;
+        matrixWorld[10] += (nextSize.dx-this.size)*delta;
       }
+
+      if(this.tempoLevel<200) {
+        this.meshTransition.material.uniforms.blink.value -= dt/200;
+        this.meshTransition.material.uniforms.blink.value = Math.max(this.meshTransition.material.uniforms.blink.value, 0);
+        const nextSize = this.getNextSizeblock();
+        matrixTransition[0] = nextSize.dx;
+        matrixTransition[5] = nextSize.dy;
+        matrixTransition[10] = nextSize.dz;
+      }      
+
       if(this.tempoLevel === 0) {
         this.level += 1;
         this.needUpdateBlocks = true;
+        this.meshTransition.visible = false;
+        this.containerBlocks.visible = true;
+        this.transitionAnimationZ = 0;
       }
     }
+  }
+
+  getNextSizeblock()  {
+    const size = groups[this.level+1].size;
+    const sum =  groups[this.level].value;
+    let remaining  = sum;
+    const gapY = size*size;
+
+    const tz = Math.floor(sum/gapY);
+    remaining = sum-tz*gapY;
+    const ty = Math.floor(remaining/size);
+
+    if(tz) {
+      return {dx:size, dy:tz, dz:size};
+    } else {
+      return {dx:size, dy:1, dz:ty};
+    }
+
   }
 
   updateBlock() {
@@ -157,8 +230,8 @@ export default class Player extends Entity {
     const gapZ = nbY*nbX*nbZ;
 
 
-    while(this.element.children.length > 0){ 
-      this.element.remove(this.element.children[0]); 
+    while(this.containerBlocks.children.length > 0){ 
+      this.containerBlocks.remove(this.containerBlocks.children[0]); 
     }
 
     const tz = Math.floor(sum/gapY); //combien de tranches completes
@@ -176,7 +249,7 @@ export default class Player extends Entity {
       const mergeArea = new THREE.Mesh(geoMergeArea, this.material);
       mergeArea.matrixAutoUpdate = false;
       mergeArea.castShadow = true;
-      this.element.add(mergeArea);
+      this.containerBlocks.add(mergeArea);
     }
 
     if(ty) {
@@ -186,7 +259,7 @@ export default class Player extends Entity {
       const mergeLine = new THREE.Mesh(geoMergeLine, this.material);
       mergeLine.matrixAutoUpdate = false;
       mergeLine.castShadow = true;
-      this.element.add(mergeLine);
+      this.containerBlocks.add(mergeLine);
     }
 
     if(tx) {
@@ -196,7 +269,7 @@ export default class Player extends Entity {
       const mergeBlock = new THREE.Mesh(geoMergeBlock, this.material);
       mergeBlock.matrixAutoUpdate = false;
       mergeBlock.castShadow = true;
-      this.element.add(mergeBlock);
+      this.containerBlocks.add(mergeBlock);
     }
 
     this.scale(size);
@@ -204,12 +277,18 @@ export default class Player extends Entity {
   }
 
   moveBlocs(x, z) {
-    const children = this.element.children;
+    const children = this.containerBlocks.children;
     for(let i=0; i<children.length; i++) {
       const matrixWorld = children[i].matrixWorld.elements;
       matrixWorld[12] = x;
       matrixWorld[14] = z;
     }
+  }
+
+  moveTransition(x, z) {
+    const matrixWorld = this.meshTransition.matrixWorld.elements;
+    matrixWorld[12] = x + this.transitionAnimationX;
+    matrixWorld[14] = z + this.transitionAnimationZ;
   }
 
   drawUv(geo, dx, dy, dz) {
