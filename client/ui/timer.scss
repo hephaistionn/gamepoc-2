@@ -2,13 +2,17 @@
   position: absolute;
   top: 0;
   right: 0;
-  width: 10rem;
   margin: 5px;
-  background: #9c9c9c;
-  text-align: center;
+  width: 5rem;
+  height: 5rem;
+  background: #ad1131;
+  border-radius: 10rem;
   &__value {
     display: inline-block;
-    margin: 0.5rem;
+    width: 100%;
+    color: white;
     font-size: 2rem;
+    line-height: 5rem;
+    text-align: center;
   }
 }

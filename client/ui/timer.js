@@ -1,6 +1,4 @@
 import Ui from '../core/ui';
-import common from '../common';
-const ee = common.ee;
 
 export default class Timer extends Ui {
 
@@ -8,28 +6,40 @@ export default class Timer extends Ui {
     this.end = false;
     this.count = duration;
     this.previous = duration;
+    this.run = false;
 
     this.container = this.makeDom('div', 'timer');
     this.value = this.makeDom('div', 'timer__value');
     this.value.textContent = this.count;
-
     this.container.appendChild(this.value);
-    document.body.appendChild(this.container);
+
+    this.on('start', this.onStart);
+    this.on('end', this.onEnd);
+
+    this.hide();
   }
 
   update(dt) {
-    if(this.end) return;
+    if(!this.run) return;
     this.count -= dt/1000;
     const count = Math.ceil(this.count);
     if(count < this.previous) {
       this.previous = count;
       this.value.textContent = count;
-
       if(count === 0) {
-        this.end = true;
-        ee.emit('end');
+        this.run = false;
+        this.emit('end');
       }
     }
+  }
+
+  onStart() {
+    this.show();
+    this.run = true;   
+  }
+
+  onEnd() {
+    this.hide();
   }
 
 }

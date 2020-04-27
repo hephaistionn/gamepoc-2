@@ -1,29 +1,33 @@
 import Ui from '../core/ui';
-import common from '../common';
-const ee = common.ee;
 
 export default class End extends Ui {
 
   init(player) {
+    this.player = player;
+
     this.container = this.makeDom('div', 'end');
     const modal = this.makeDom('div', 'end__modal');
     const title = this.makeDom('div', 'end__modal__title', 'Gameover');
     this.score = this.makeDom('div', 'end__modal__score', '0');
-    const buttonHome =  this.makeDom('div', 'end__modal__button', 'Home');
+    const buttonHome = this.makeButton('div', 'end__button', 'RETOUR', this.goHome);
 
     modal.appendChild(title);
     modal.appendChild(this.score);
-    modal.appendChild(buttonHome);
     this.container.appendChild(modal);
+    this.container.appendChild(buttonHome);
 
-    buttonHome.onclick = () => {
-      ee.emit('changeView', 'home');
-    }
+    this.on('end', this.onEnd);
 
-    ee.on('end', () =>{
-      this.score.textContent = player.value;
-      document.body.appendChild(this.container);
-    });
+    this.hide();
+  }
+
+  onEnd() {
+    this.score.textContent = this.player.value;
+    this.show();
+  }
+
+  goHome(){
+    this.emit('changeView', 'home');
   }
 
 }

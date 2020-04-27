@@ -1,6 +1,4 @@
 import Ui from '../core/ui';
-import common from '../common';
-const ee = common.ee;
 
 export default class Score extends Ui {
 
@@ -11,31 +9,18 @@ export default class Score extends Ui {
     this.particles = [];
     this.currentParticle = 0;
 
-    this.scoreContainer = this.makeDom('div', 'score');
-    this.scoreValue = this.makeDom('div', 'score__value');
+    this.container = this.makeDom('div', 'score');
+    this.scoreValue = this.makeDom('div', 'score__value', '0');
     this.particlesContainer = this.makeDom('div', 'paricles');
 
-    this.scoreContainer.appendChild(this.scoreValue);
-    document.body.appendChild(this.scoreContainer);
-    document.body.appendChild(this.particlesContainer);
+    this.container.appendChild(this.scoreValue);
 
-    this.prepareParticle();
+    this.on('scored', this.onScore);
+    this.on('start', this.onStart);
+    this.on('end', this.onEnd);
+    this.on('leveled', this.onLeveled);
 
-    ee.on('scored', data =>{
-      this.updateScore(data.sum, data.value);
-    });
-
-    ee.on('leveled', level =>{
-      this.level = level; 
-    });
-
-    this.updateScore(0, 0);
-  }
-
-  updateScore(sum, value) {
-    this.updateParticle(value);
-    this.value = sum;
-    this.scoreValue.textContent = this.value;
+    this.hide();
   }
 
   updateParticle(value) {
@@ -52,10 +37,30 @@ export default class Score extends Ui {
   }
 
   prepareParticle() {
+    /*document.body.appendChild(this.particlesContainer);
     for(let i=0; i<this.particleCount; i++) {
       const node = this.makeDom('div', 'paricles__particle', '+1');
       this.particles.push(node);
       this.particlesContainer.appendChild(node);
-    }
+    }*/
   }
+
+  onScore(data) {
+    this.updateParticle(data.value);
+    this.value = data.sum;
+    this.scoreValue.textContent = this.value;
+  }
+
+  onStart() {
+    this.show();
+  }
+
+  onEnd() {
+    this.hide();
+  }
+
+  onLeveled(level) {
+    this.level = level; 
+  }
+
 }

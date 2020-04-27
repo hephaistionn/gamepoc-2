@@ -9,9 +9,8 @@ import Feed from '../entities/feed';
 import Score from '../ui/score';
 import Timer from '../ui/timer';
 import End from '../ui/end';
-import Stats from 'stats.js';
 import pixelMap from '../core/pixelmap';
-let stats;
+import Starter from '../ui/starter';
 
 
 export default class World extends View {
@@ -25,9 +24,10 @@ export default class World extends View {
     this.ground = new Ground({ x: 0, y: 0, z: 0, size: map?map.nbX:3500 });
     this.feeds = common.populateWithMap(Feed, map);
     this.player = common.populatePlayer(Player, this.ground.size, map, config );
-    this.score = new Score();
     this.effect = new Effect();
+    this.score = new Score();
     this.timer =  new Timer(75);
+    this.starter = new Starter();
     this.end = new End(this.player);
 
     this.add(this.camera);
@@ -35,11 +35,10 @@ export default class World extends View {
     this.add(this.ground);
     this.add(this.player);
     this.add(this.feeds);
-    this.initJoystick();
-
-    stats = new Stats();
-    stats.showPanel( 0 );
-    document.body.appendChild( stats.dom );
+    this.add(this.score);
+    this.add(this.timer);
+    this.add(this.starter);
+    this.add(this.end);
   }
 
   update(dt) {
@@ -48,9 +47,8 @@ export default class World extends View {
     this.light.update(dt, this.player);
     this.effect.update(dt, this.camera, this.player.size);
     this.timer.update(dt);
+    this.starter.update(dt);
     Feed.update(dt);
-    stats.end();
-    stats.begin();
   }
 
   onTouchMouve(force, angle) {
@@ -59,18 +57,6 @@ export default class World extends View {
 
   onTouchEnd() {
     this.player.setForce(0, 0);
-  }
-
-  onEnd() {
-    this.player.setForce(0);  
-  }
-
-  onDismount() {
-    this.remove(this.camera);
-    this.remove(this.light);
-    this.remove(this.ground);
-    this.remove(this.player);
-    this.remove(this.feeds);
   }
 
 }

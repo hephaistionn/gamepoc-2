@@ -1,11 +1,12 @@
 import * as THREE from 'three';
 import nipplejs from 'nipplejs';
 import common from '../common';
+import Stats from 'stats.js';
 const ee = common.ee;
 
 export default class View {
 
-  constructor() {
+  constructor(conf) {
     document.body.className = this.cname;
     this.canvas = document.createElement('canvas');
     document.body.appendChild(this.canvas);
@@ -17,43 +18,35 @@ export default class View {
     this.renderer.shadowMap.enabled = true;
     this.element = new THREE.Scene();
     this.element.matrixAutoUpdate = false;
+
+    this.childen =  [];
     this.events = {};
 
+    if(conf && conf.stats) {
+      this.stats = new Stats();
+      document.body.appendChild( this.stats.dom );
+    }
+
     this.initEvents();
-
-    ee.on('end', () =>{
-      this.closeJoystick();
-      this.joystick = null;
-      if(this.onEnd) {
-        this.onEnd();
-      }
-    });
-  }
-
-  initEvents() {
-    this._resize = this.resize.bind(this);
-    window.addEventListener('resize', this._resize, false);
   }
 
   initJoystick() {
     const options = {
       zone: document.body,
-      mode: 'dynamic',
       color: 'blue',
       multitouch: false
     };
     this.joystick = nipplejs.create(options);
+
     this.joystick.on('move', (evt, data) => {
-      if(this.onTouchMouve) {
-        data.angle.radian+=Math.PI/4; //camera angle
-        this.onTouchMouve(Math.min(data.force, 2), data.angle.radian);
-      }
+      data.angle.radian+=Math.PI/4; //camera angle
+      this.onTouchMouve(Math.min(data.force, 2), data.angle.radian);
     });
 
     this.joystick.on('end', () => {
-      if(this.onTouchEnd)
-        this.onTouchEnd();
+      this.onTouchEnd();
     });
+
   }
 
   start() {
@@ -66,25 +59,27 @@ export default class View {
       dt = Math.min(dt, 100);
       this.renderer.render(this.element, this.camera.element);
       this.update(dt);
+      if(this.stats) {
+        this.stats.end();
+        this.stats.begin();
+      }
     };
     update();
     this.resize();
   }
 
-  dismount() {
-    while (document.body.firstChild) {
-      document.body.removeChild(document.body.firstChild);
-    }
-    if(this.onDismount) {
-      this.onDismount();
-    }
-    this.stop();
-  }
-
   stop() {
     this.closeEvents();
-    this.closeJoystick();
     cancelAnimationFrame(this.requestAnimation);
+  }
+
+  end() {
+    this.joystick.destroy();
+    this.onTouchEnd();
+  }
+
+  begin() {
+    this.initJoystick();
   }
 
   resize() {
@@ -103,6 +98,7 @@ export default class View {
     } else {
       child.onMount(this);
     }
+    this.childen.push(child);
   }
 
   remove(child) {
@@ -113,15 +109,46 @@ export default class View {
     } else {
       child.onDismount();
     }
+    const index = this.childen.findIndex(child);
+    this.splice(index, 1);
+  }
+
+  initEvents() {
+    this.events.resize = this.resize.bind(this);
+    this.events.end = this.end.bind(this);
+    this.events.begin = this.begin.bind(this);
+
+    window.addEventListener('resize', this.events.resize, false);
+    ee.on('end',  this.events.end);
+    ee.on('start',  this.events.begin);
   }
 
   closeEvents() {
-    window.removeEventListener('resize', this._resize);;
+    window.removeEventListener('resize', this.events.resize);
+    ee.off('end',  this.events.end);
+    ee.off('start',  this.events.begin);
   }
 
-  closeJoystick() {
-    if(this.joystick) {
-      this.joystick.destroy();
+  dismount() {
+    this.stop();
+    for( let i=0; i<this.childen.length; i++) {
+      const child = this.childen[i];
+      if(Array.isArray(child)) {
+        for(let i=0; i<child.length; i++) {
+          child[i].onDismount();
+        }
+      } else {
+        child.onDismount();
+      }
+    }
+
+    while (document.body.firstChild) {
+      document.body.removeChild(document.body.firstChild);
+    }
+
+    if(this.onDismount) {
+      this.onDismount();
     }
   }
+
 }
