@@ -21,6 +21,7 @@ export default class View {
 
     this.childen =  [];
     this.events = {};
+    this.keyPress = {};
 
     if(conf && conf.stats) {
       this.stats = new Stats();
@@ -46,7 +47,18 @@ export default class View {
     this.joystick.on('end', () => {
       this.onTouchEnd();
     });
+  }
 
+  initKeyHandler() {
+    this.events.keydown = this.keydown.bind(this);
+    this.events.keyup = this.keyup.bind(this);
+    document.addEventListener('keydown', this.events.keydown);
+    document.addEventListener('keyup', this.events.keyup);
+  }
+
+  closeKeyHandler() {
+    document.removeEventListener('keydown', this.events.keydown);
+    document.removeEventListener('keyup', this.events.keyup);
   }
 
   start() {
@@ -75,11 +87,13 @@ export default class View {
 
   end() {
     this.joystick.destroy();
+    this.closeKeyHandler();
     this.onTouchEnd();
   }
 
   begin() {
     this.initJoystick();
+    this.initKeyHandler();
   }
 
   resize() {
@@ -88,6 +102,42 @@ export default class View {
     const height = this.canvas.clientHeight;
     this.camera.resize(width, height);
     this.renderer.setSize(width, height);
+  }
+
+  keydown(e) {
+    if(this.onTouchMouve) {
+      this.keyPress[e.code] = true;
+      this.keyToMove(this.keyPress);
+    }
+  }
+
+  keyup(e) {
+    if(this.onTouchMouve) {
+      this.keyPress[e.code] = false;
+      this.keyToMove(this.keyPress);
+    }
+  }
+
+  keyToMove(keyPress) {
+    if(keyPress.ArrowRight && keyPress.ArrowUp || keyPress.KeyD && keyPress.KeyW) {
+      this.onTouchMouve(2, Math.PI/4+Math.PI/4);
+    } else if(keyPress.ArrowLeft && keyPress.ArrowUp  || keyPress.KeyA && keyPress.KeyW) {
+      this.onTouchMouve(2, Math.PI*3/4+Math.PI/4);
+    } else if(keyPress.ArrowLeft && keyPress.ArrowDown  || keyPress.KeyA && keyPress.KeyS) {
+      this.onTouchMouve(2, Math.PI*5/4+Math.PI/4);
+    } else if(keyPress.ArrowRight && keyPress.ArrowDown || keyPress.KeyD && keyPress.KeyS) {
+      this.onTouchMouve(2, Math.PI*7/4+Math.PI/4);
+    } else if(keyPress.ArrowRight || keyPress.KeyD) {
+      this.onTouchMouve(2, 0+Math.PI/4);
+    } else if(keyPress.ArrowUp || keyPress.KeyW) {
+      this.onTouchMouve(2, Math.PI/2+Math.PI/4);
+    } else if(keyPress.ArrowLeft || keyPress.KeyA) {
+      this.onTouchMouve(2, Math.PI+Math.PI/4);
+    } else if(keyPress.ArrowDown || keyPress.KeyS) {
+      this.onTouchMouve(2, Math.PI*3/2+Math.PI/4);
+    } else {
+      this.onTouchMouve(0);
+    }
   }
 
   add(child) {
@@ -150,5 +200,4 @@ export default class View {
       this.onDismount();
     }
   }
-
 }
